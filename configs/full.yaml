@@ -1,0 +1,18 @@
+# Full NoPeek-8K: S&P 500 + S&P 400, every in-scope 8-K since 2018 (several hours of polite EDGAR fetching).
+name: full
+seed: 0
+indexes: [sp500, sp400]
+n_firms: null
+start: "2018-01-01"
+end: null
+quota: null
+splits:
+  train: ["2018-01-01", "2022-12-31"]
+  test_pre: ["2023-01-01", "2023-12-31"]
+  val: ["2024-01-01", "2024-12-31"]
+  test_post: ["2025-07-01", null]
+horizon: 3
+benchmark: SPY
+winsor: [0.01, 0.99]
+workers: 6
+sec_max_rps: 8

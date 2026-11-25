@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or code, please cite it as below."
+title: "No Peeking: teaching small LLMs to reason about markets without seeing the future"
+authors:
+  - family-names: Feltrin
+    given-names: Kévin
+repository-code: "https://github.com/KvnFltr/no-peeking"
+license: MIT
+version: 0.1.0
+date-released: 2026-11-25
+keywords: [look-ahead bias, LLM, finance, SEC 8-K, benchmark, GRPO, DPO]

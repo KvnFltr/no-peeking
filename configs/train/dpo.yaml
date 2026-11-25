@@ -1,0 +1,10 @@
+# DPO on (hindsight for the realized outcome) vs (hindsight for the opposite outcome), from the SFT-hindsight adapter.
+dataset_config: configs/pilot.yaml
+base_model: Qwen/Qwen2.5-0.5B-Instruct
+init_adapter: outputs/sft_hindsight-qwen0.5b
+output_dir: outputs/dpo-qwen0.5b
+beta: 0.1
+max_length: 1536
+max_prompt_length: 1200
+lora: {r: 16, alpha: 32, dropout: 0.05}
+train: {learning_rate: 5.0e-6, batch_size: 1, grad_accum: 16, epochs: 1, seed: 0}

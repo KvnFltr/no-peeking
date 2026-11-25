@@ -1,0 +1,11 @@
+# Teacher rationales (Kaggle 2xT4: Qwen2.5-7B-Instruct in 4-bit).
+dataset_config: configs/pilot.yaml
+teacher: Qwen/Qwen2.5-7B-Instruct
+teacher_dtype: 4bit
+splits: [train]
+max_filings: 2000          # cap to stay inside the free GPU budget
+variants: [hindsight, control, flipped]
+max_chars: 6000
+max_prompt_tokens: 1536
+min_fact_precision: 0.8
+generation: {batch_size: 8, max_new_tokens: 320, temperature: 0.7, top_p: 0.9}

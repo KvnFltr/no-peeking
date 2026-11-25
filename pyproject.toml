@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nopeeking"
+version = "0.1.0"
+description = "No Peeking: a self-refreshing benchmark of SEC 8-K filings and market reactions, and small-LLM post-training without look-ahead bias."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Kévin Feltrin" }]
+keywords = ["llm", "finance", "benchmark", "look-ahead bias", "sec", "edgar", "grpo", "dpo"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "pyarrow>=15",
+  "scipy>=1.11",
+  "scikit-learn>=1.4",
+  "requests>=2.31",
+  "beautifulsoup4>=4.12",
+  "lxml>=5",
+  "pyyaml>=6",
+  "yfinance>=0.2.54",
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+llm = ["torch>=2.4", "transformers>=4.46", "accelerate>=1.0"]
+train = ["torch>=2.4", "transformers>=4.46", "accelerate>=1.0", "trl>=0.16", "peft>=0.13", "datasets>=3.0"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+nopeeking = "nopeeking.cli:main"
+
+[project.urls]
+Repository = "https://github.com/KvnFltr/no-peeking"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nopeeking"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

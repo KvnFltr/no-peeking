@@ -1,0 +1,22 @@
+# Pilot: ~500 filings end to end before any scaling (working rule #1).
+name: pilot
+seed: 0
+indexes: [sp500]
+n_firms: 80
+start: "2018-01-01"
+end: null            # today; filings whose 3-day window has not closed are dropped (and logged)
+quota:               # stratified sample so every split is represented
+  train: 250
+  test_pre: 100
+  val: 50
+  test_post: 100
+splits:
+  train: ["2018-01-01", "2022-12-31"]
+  test_pre: ["2023-01-01", "2023-12-31"]   # pre-cutoff test: only used to measure the memorization gap
+  val: ["2024-01-01", "2024-12-31"]
+  test_post: ["2025-07-01", null]          # after the newest student/teacher training cutoff
+horizon: 3
+benchmark: SPY
+winsor: [0.01, 0.99]
+workers: 4
+sec_max_rps: 8

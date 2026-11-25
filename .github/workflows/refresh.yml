@@ -1,0 +1,41 @@
+# Monthly refresh: append filings whose 3-day window has closed, re-score the cheap baselines, open a PR.
+# Disabled until the repository secret SEC_USER_AGENT ("<name> <contact email>") is set.
+name: Monthly refresh
+on:
+  schedule:
+    - cron: "0 6 3 * *"   # 06:00 UTC on the 3rd of every month
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  refresh:
+    if: ${{ vars.REFRESH_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      NOPEEKING_SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: nopeeking-cache-${{ github.run_id }}
+          restore-keys: nopeeking-cache-
+      - run: pip install -e .
+      - run: nopeeking -v data build --config configs/full.yaml
+      - run: nopeeking -v baselines --config configs/full.yaml
+      - run: nopeeking report --config configs/full.yaml
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          branch: refresh/${{ github.run_id }}
+          title: "Monthly refresh of the post-cutoff test set"
+          commit-message: "Refresh NoPeek-8K and leaderboard"
+          add-paths: |
+            results/full
+            README.md
+            data/universe

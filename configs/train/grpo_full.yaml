@@ -1,0 +1,11 @@
+# GRPO from the SFT-hindsight adapter. Rewards: {outcome: 1.0, grounding: 0.5, format: 0.25}
+dataset_config: configs/pilot.yaml
+base_model: Qwen/Qwen2.5-0.5B-Instruct
+init_adapter: outputs/sft_hindsight-qwen0.5b
+output_dir: outputs/grpo_full-qwen0.5b
+rewards: {outcome: 1.0, grounding: 0.5, format: 0.25}
+max_prompts: 1000
+max_chars: 4000
+grpo: {num_generations: 4, max_completion_length: 256, max_prompt_length: 1200, temperature: 0.9, beta: 0.04}
+lora: {r: 16, alpha: 32, dropout: 0.05}
+train: {learning_rate: 1.0e-5, batch_size: 4, grad_accum: 4, epochs: 1, seed: 0}
