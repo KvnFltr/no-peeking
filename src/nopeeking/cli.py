@@ -56,6 +56,7 @@ def _cmd_probe(args: argparse.Namespace) -> None:
         max_input_tokens=args.max_input_tokens,
         batch_size=args.batch_size,
         dtype=args.dtype,
+        with_market=not args.no_market,
     )
     print(f"wrote {out}")
 
@@ -117,6 +118,7 @@ def build_parser() -> argparse.ArgumentParser:
     probe.add_argument("--device", default=None, help="cpu, cuda, auto (default: cuda if available)")
     probe.add_argument("--dtype", default="auto", help="auto, float32, bfloat16, float16, 4bit")
     probe.add_argument("--max-input-tokens", type=int, default=768)
+    probe.add_argument("--no-market", action="store_true", help="skip prices and the long-short portfolio")
     probe.add_argument("--batch-size", type=int, default=4)
     probe.set_defaults(func=_cmd_probe, log_name="probe")
 

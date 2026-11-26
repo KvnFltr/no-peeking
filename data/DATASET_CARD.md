@@ -18,11 +18,11 @@ Built with [`nopeeking`](https://github.com/KvnFltr/no-peeking): `nopeeking data
 
 | field | description |
 |---|---|
-| `id`, `accession`, `cik`, `ticker`, `company` | EDGAR identifiers |
+| `id`, `accession`, `cik`, `ticker`, `company`, `index_name` | EDGAR identifiers; index membership at build time (sp500 / sp400) |
 | `items`, `event_type` | 8-K item codes; earnings (2.02) > deal (1.01/2.01) > exec_change (5.02) > other (8.01) |
 | `acceptance_utc`, `filing_date`, `event_day`, `window_end` | EDGAR acceptance time; first session closing after it; end of the 3-day window |
 | `split` | train (2018-22), test_pre (2023), val (2024), test_post (2025-07 onwards) |
-| `text`, `text_8k`, `text_ex99`, `has_ex99` | extracted filing text (8-K items + press release), truncated to 20,000 characters |
+| `text`, `has_ex99`, `n_chars_8k`, `n_chars_ex99` | extracted filing text (8-K items + Exhibit 99.1, legal boilerplate removed), truncated to 20,000 characters |
 | `ar_1d`, `ar_3d`, `ar_3d_w`, `ar_1d_w` | stock return minus SPY return (raw and winsorized at train 1%/99%) |
 | `y_up`, `y_up_1d`, `y_tercile` | targets: 3-day sign, 1-day sign, tercile with train cut-offs |
 | `aliases`, `tickers_all` | names and tickers used by the anonymizer |

@@ -96,6 +96,7 @@ def run_probe(
     batch_size: int = 4,
     dtype: str = "auto",
     adapter: str | None = None,
+    with_market: bool = True,
 ) -> str:
     from nopeeking.eval.evaluate import evaluate, load_market
     from nopeeking.eval.llm import YesNoScorer
@@ -160,7 +161,7 @@ def run_probe(
     done = done[done["id"].isin(df["id"])]
     wide = done.pivot_table(index="id", columns="variant", values="p_up").reset_index()
     try:
-        market = load_market(cfg, df)
+        market = load_market(cfg, df) if with_market else None
     except Exception as err:  # e.g. Yahoo blocking a cloud IP: metrics still computed, portfolio skipped
         log.warning("prices unavailable, long-short portfolio skipped: %r", err)
         market = None

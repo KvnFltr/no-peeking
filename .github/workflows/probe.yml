@@ -1,0 +1,56 @@
+# Score a small model with the look-ahead probe on CPU runners (no GPU needed for <= 1.5B parameters).
+# Each split is a separate job; predictions are uploaded as artifacts and merged by `nopeeking report` locally.
+name: Probe (CPU)
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Hugging Face model id
+        required: true
+        default: Qwen/Qwen2.5-0.5B-Instruct
+      limit:
+        description: Filings per split (seeded sample)
+        required: true
+        default: "1000"
+      max_input_tokens:
+        description: Prompt budget in tokens
+        required: true
+        default: "512"
+      data_release:
+        description: Release tag holding the dataset parquet
+        required: true
+        default: data-v1
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        split: [test_pre, test_post, val]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[llm]"
+      - name: Fetch dataset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p data/processed/v1
+          gh release download "${{ inputs.data_release }}" -p "*.parquet" -p "*.json" -D data/processed/v1
+          ls -la data/processed/v1
+      - name: Probe
+        run: >
+          nopeeking -v probe "${{ inputs.model }}" --config configs/v1.yaml --splits ${{ matrix.split }}
+          --limit ${{ inputs.limit }} --max-input-tokens ${{ inputs.max_input_tokens }} --device cpu --batch-size 4 --no-market
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-${{ matrix.split }}
+          path: |
+            results/v1/predictions/probe__*.parquet
+            logs/probe.log

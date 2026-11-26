@@ -45,8 +45,8 @@ Target: sign of the 3-day market-adjusted return (stock minus SPY) over sessions
 
 ## Finance
 
-Long-short, market-hedged, top vs. bottom tercile of the score (cut-offs from `val` scores), 3-day holding, 5 bps per
-side. Annualized Sharpe with a circular block bootstrap CI (block 5 days). Reported for every method, never used for
+Long-short, market-hedged, top vs. bottom tercile of the score (cut-offs from `val` scores), entered at the first close
+after the filing (close of day t) and held over sessions t+1 and t+2, 5 bps per side. Annualized Sharpe with a circular block bootstrap CI (block 5 days). Reported for every method, never used for
 selection.
 
 ## Changelog
@@ -58,3 +58,7 @@ selection.
   Brier/ECE now meaningful). The pilot's seed-0 train sample has an up-rate of 0.407 versus 0.513 for its full
   candidate pool (other seeds: 0.51-0.57); the seed was kept. Pilot test filings were looked at by the baselines only;
   the main results use the full dataset and are scored once per method.
+* 2026-11-26, v1 (19,783 filings): the first v1 portfolio run entered positions at the close of t-1, before the filing
+  was public, which is a look-ahead error in the simulator (it reported a TF-IDF Sharpe ratio of 2.12). Positions now
+  enter at the close of t and earn t+1..t+2 only; this was fixed before any language model was evaluated, and the
+  prediction target itself is unchanged.

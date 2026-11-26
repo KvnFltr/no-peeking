@@ -34,15 +34,19 @@ def test_bootstrap_is_reproducible_and_brackets_point():
     assert m["auc_lo"] <= m["auc"] <= m["auc_hi"] and m["rank_ic"] > 0
 
 
-def test_long_short_portfolio_signs_and_costs():
+def test_long_short_portfolio_signs_costs_and_tradable_timing():
     cal = pd.bdate_range("2025-01-01", periods=10)
     bench = pd.Series(100.0, index=cal)
     close = pd.DataFrame({"UP": 100 * 1.01 ** np.arange(10), "DN": 100 * 0.99 ** np.arange(10)}, index=cal)
     events = pd.DataFrame({"ticker": ["UP", "DN"], "event_day": [cal[2], cal[2]], "score": [0.9, 0.1]})
     daily = long_short_returns(events, 0.3, 0.7, close, bench, horizon=3, cost_bps=0.0)
-    assert len(daily) == 3 and (daily > 0.019).all()
+    assert list(daily.index) == [cal[3], cal[4]]  # day t (cal[2]) is not tradable: entry at close(t)
+    assert (daily > 0.019).all()
     with_cost = long_short_returns(events, 0.3, 0.7, close, bench, horizon=3, cost_bps=10.0)
     assert with_cost.iloc[0] == pytest.approx(daily.iloc[0] - 2 * 2 * 10 / 1e4)
+    jump = close.copy()
+    jump.loc[cal[2] :, "UP"] *= 1.5  # a 50% reaction on day t must not be earned
+    assert long_short_returns(events.iloc[:1], 0.3, 0.7, jump, bench, 3, 0.0).max() < 0.02
     assert np.isnan(sharpe(np.zeros(5)))
 
 

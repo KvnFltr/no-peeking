@@ -219,7 +219,11 @@ score, expected calibration error \citep{guo2017calibration} and the rank correl
 
 \paragraph{Portfolio.}
 On the post-cutoff test, each filing with a score in the top (bottom) tercile of validation scores opens a long
-(short) position for the 3-day window, hedged with SPY, equally weighted within legs, with 5 bps per side. We report
+(short) position at the first close after the filing, the close of day $t$, and holds it for the two remaining
+sessions of the window, hedged with SPY, equally weighted within legs, with 5 bps per side. The day-$t$ reaction is
+part of the prediction target but cannot be traded with daily closes; an earlier version of our simulator entered at
+the close of $t-1$, before the filing was public, and overstated the Sharpe ratio, a look-ahead error caught before
+any language model was evaluated. We report
 the annualized Sharpe ratio with a circular block bootstrap interval \citep{politis1992circular}. The portfolio is
 reported for every method and never used for selection.
 
