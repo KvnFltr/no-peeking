@@ -98,11 +98,13 @@ def run_probe(
     adapter: str | None = None,
     with_market: bool = True,
     shard: tuple[int, int] | None = None,
+    cached_only: bool = False,
 ) -> str:
     """Score (and cache) every pending prompt, then write the probe summary JSON.
 
     ``shard=(i, n)`` only scores every n-th prompt starting at i and returns the cache path without
     computing metrics, so that one model can be spread over several machines and merged afterwards.
+    ``cached_only`` refuses to load the model: it fails if any prediction is missing from the cache.
     """
     from nopeeking.eval.evaluate import evaluate, load_market
     from nopeeking.eval.llm import YesNoScorer
@@ -135,6 +137,8 @@ def run_probe(
     pending = [j for j in jobs if j not in seen]
     log.info("probe %s: %d jobs, %d cached, %d pending", slug, len(jobs), len(seen), len(pending))
 
+    if pending and cached_only:
+        raise RuntimeError(f"{len(pending)} of {len(jobs)} predictions missing from {cache_path}")
     if pending:
         scorer = YesNoScorer(
             model_id, device=device, dtype=dtype, max_input_tokens=max_input_tokens, adapter=adapter

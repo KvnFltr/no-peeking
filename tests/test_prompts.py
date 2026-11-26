@@ -1,5 +1,6 @@
 import json
 
+import numpy as np
 import pandas as pd
 
 from nopeeking.prompts import direct_messages, filing_block, parse_answer, reasoning_messages
@@ -40,3 +41,46 @@ def test_parse_answer():
     bad = parse_answer("Prediction: Down\nProbability of outperforming: 0.7")
     assert bad["direction"] == "Down" and not bad["consistent"] and not bad["has_reasoning"]
     assert parse_answer("no idea")["p_up"] is None
+
+
+class _Out:
+    def __init__(self, logits):
+        self.logits = logits
+
+
+class _NewModel:
+    """Forward that knows `logits_to_keep` and returns one position when asked."""
+
+    def __init__(self):
+        self.calls = []
+
+    def __call__(self, input_ids, attention_mask, position_ids, logits_to_keep=0):
+        self.calls.append(logits_to_keep)
+        n = logits_to_keep or input_ids.shape[1]
+        return _Out(np.arange(input_ids.shape[0] * n * 3, dtype=float).reshape(input_ids.shape[0], n, 3))
+
+
+class _OldModel:
+    """Forward without any logits-trimming argument."""
+
+    def __call__(self, input_ids, attention_mask, position_ids):
+        return _Out(
+            np.arange(input_ids.shape[0] * input_ids.shape[1] * 3, dtype=float).reshape(
+                -1, input_ids.shape[1], 3
+            )
+        )
+
+
+def test_last_logits_keeps_only_the_last_position_when_supported():
+    from nopeeking.eval.llm import YesNoScorer
+
+    ids = np.zeros((2, 5), dtype=int)
+    new = object.__new__(YesNoScorer)
+    new.model = _NewModel()
+    assert new._last_logits(ids, ids, ids).shape == (2, 3)
+    assert new._keep_key == "logits_to_keep" and new.model.calls == [1]
+    old = object.__new__(YesNoScorer)
+    old.model = _OldModel()
+    full = old._last_logits(ids, ids, ids)
+    assert old._keep_key is None
+    assert full.tolist() == _OldModel()(ids, ids, ids).logits[:, -1, :].tolist()

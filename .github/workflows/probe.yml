@@ -28,6 +28,10 @@ on:
         description: auto (float32 on CPU) or bfloat16 for models that do not fit in 16 GB
         required: true
         default: auto
+      only:
+        description: "Optional subset of jobs to (re)run, e.g. test_pre:1,val:3 (empty = all)"
+        required: false
+        default: ""
       data_release:
         description: Release tag holding the dataset parquet
         required: true
@@ -36,19 +40,28 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     outputs:
-      shards: ${{ steps.m.outputs.shards }}
+      matrix: ${{ steps.m.outputs.matrix }}
     steps:
       - id: m
-        run: python3 -c "import json; print('shards=' + json.dumps(list(range(int('${{ inputs.shards }}')))))" >> "$GITHUB_OUTPUT"
+        env:
+          SHARDS: ${{ inputs.shards }}
+          ONLY: ${{ inputs.only }}
+        shell: python
+        run: |
+          import json, os
+          n = int(os.environ["SHARDS"])
+          only = {x.strip() for x in os.environ["ONLY"].split(",") if x.strip()}
+          cells = [{"split": s, "shard": i} for s in ("test_pre", "test_post", "val") for i in range(n)]
+          cells = [c for c in cells if not only or f"{c['split']}:{c['shard']}" in only]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write("matrix=" + json.dumps({"include": cells}) + "\n")
   probe:
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 355
     strategy:
       fail-fast: false
-      matrix:
-        split: [test_pre, test_post, val]
-        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -110,6 +110,24 @@ class YesNoScorer:
             ids = self.render(make_messages(chars))
         return ids
 
+    def _last_logits(self, input_ids, attn, pos):
+        """Next-token logits at the last position only. Asking the model for every position costs
+        batch x length x vocabulary floats (about 1.5 GB for Qwen at 4 x 600 tokens), which is what pushed
+        3B models out of memory on 16 GB CPU runners; ``logits_to_keep`` skips that (older transformers
+        call it ``num_logits_to_keep``, and models without it fall back to the full computation)."""
+        kwargs = {"input_ids": input_ids, "attention_mask": attn, "position_ids": pos}
+        if not hasattr(self, "_keep_key"):
+            for key in ("logits_to_keep", "num_logits_to_keep"):
+                try:
+                    out = self.model(**kwargs, **{key: 1})
+                except TypeError:
+                    continue
+                self._keep_key = key
+                return out.logits[:, -1, :]
+            self._keep_key = None
+        extra = {self._keep_key: 1} if self._keep_key else {}
+        return self.model(**kwargs, **extra).logits[:, -1, :]
+
     def score(self, batch_ids: list[list[int]], batch_size: int = 4) -> tuple[np.ndarray, np.ndarray]:
         torch = self.torch
         order = np.argsort([len(x) for x in batch_ids])
@@ -125,9 +143,7 @@ class YesNoScorer:
                 input_ids = torch.tensor([[pad] * (width - len(s)) + s for s in seqs], device=dev)
                 attn = torch.tensor([[0] * (width - len(s)) + [1] * len(s) for s in seqs], device=dev)
                 pos = (attn.cumsum(-1) - 1).clamp(min=0)
-                logits = self.model(input_ids=input_ids, attention_mask=attn, position_ids=pos).logits[
-                    :, -1, :
-                ]
+                logits = self._last_logits(input_ids, attn, pos)
                 probs = logits.float().softmax(-1)
                 py = probs[:, self.yes_ids].sum(-1)
                 pn = probs[:, self.no_ids].sum(-1)

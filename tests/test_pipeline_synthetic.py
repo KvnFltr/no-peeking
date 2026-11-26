@@ -134,3 +134,13 @@ def test_probe_shards_merge_to_the_unsharded_result(tmp_path, monkeypatch):
     direct = json.loads(Path(run_probe(cfg, "fake", max_input_tokens=512, with_market=False)).read_text())
     assert sharded["gap"]["auc"]["did"] == direct["gap"]["auc"]["did"]
     assert sharded["metrics"]["original"]["test_post"]["auc"] > 0.6
+
+
+def test_probe_cached_only_refuses_to_load_a_model(tmp_path):
+    import pytest
+
+    from nopeeking.eval.probe import run_probe
+
+    cfg = _make(tmp_path)
+    with pytest.raises(RuntimeError, match="missing"):
+        run_probe(cfg, "fake", max_input_tokens=512, with_market=False, cached_only=True)
