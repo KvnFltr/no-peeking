@@ -25,7 +25,7 @@ def evaluate_adapter(
     import torch
 
     from nopeeking.eval.evaluate import evaluate, load_market
-    from nopeeking.eval.llm import YesNoScorer, load_model
+    from nopeeking.eval.llm import YesNoScorer, chat_text, load_model
     from nopeeking.prompts import direct_messages, parse_answer, reasoning_messages
     from nopeeking.train.rewards import fact_precision, leak_flags
 
@@ -51,10 +51,8 @@ def evaluate_adapter(
         for i in range(0, len(df), batch_size):
             batch = df.iloc[i : i + batch_size]
             prompts = [
-                tok.apply_chat_template(
-                    reasoning_messages(r, max_chars=run.get("max_chars", 4000), horizon=cfg.horizon),
-                    tokenize=False,
-                    add_generation_prompt=True,
+                chat_text(
+                    tok, reasoning_messages(r, max_chars=run.get("max_chars", 4000), horizon=cfg.horizon)
                 )
                 for _, r in batch.iterrows()
             ]

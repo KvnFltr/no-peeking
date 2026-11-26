@@ -43,6 +43,7 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
     end = cfg.end_ts
 
     uni = load_universe(cfg.indexes, client, cfg.universe_dir)
+    uni = uni.rename(columns={"index": "index_name"})
     flog.add("universe firms (unique CIK)", len(uni), note="+".join(cfg.indexes))
     if cfg.n_firms and cfg.n_firms < len(uni):
         uni = uni.sample(n=cfg.n_firms, random_state=cfg.seed).reset_index(drop=True)
@@ -58,6 +59,7 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
         if filings.empty:
             continue
         filings["ticker"] = firm.ticker
+        filings["index_name"] = firm.index_name
         filings["company"] = meta["name"] or firm.name
         filings["aliases"] = json.dumps(sorted({firm.name, meta["name"], *meta["former_names"]}))
         filings["tickers_all"] = json.dumps(sorted({firm.ticker, *meta["tickers"]}))
@@ -134,6 +136,8 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
     df["text_8k"] = df["accession"].map(lambda a: texts[a]["text_8k"])
     df["text_ex99"] = df["accession"].map(lambda a: texts[a]["text_ex99"])
     df["has_ex99"] = df["accession"].map(lambda a: bool(texts[a]["has_ex99"]))
+    df["n_chars_8k"] = df["text_8k"].str.len()
+    df["n_chars_ex99"] = df["text_ex99"].str.len()
     df["text"] = [
         combine_text(a, b, cfg.max_text_chars) for a, b in zip(df["text_8k"], df["text_ex99"], strict=True)
     ]
@@ -154,6 +158,7 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
         "accession",
         "cik",
         "ticker",
+        "index_name",
         "company",
         "aliases",
         "tickers_all",
@@ -166,8 +171,8 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
         "split",
         "has_ex99",
         "text",
-        "text_8k",
-        "text_ex99",
+        "n_chars_8k",
+        "n_chars_ex99",
         "ret_1d",
         "ar_1d",
         f"ret_{cfg.horizon}d",
@@ -182,7 +187,7 @@ def build_dataset(cfg: DataConfig) -> pd.DataFrame:
 
     out = cfg.dataset_dir
     out.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(cfg.dataset_path, index=False)
+    df.to_parquet(cfg.dataset_path, index=False, compression="zstd")
     stats = {
         "config": asdict(cfg),
         "n": len(df),

@@ -1,0 +1,400 @@
+ticker,name,index,cik
+AA,Alcoa,sp400,1675149
+AAL,American Airlines Group,sp400,6201
+AAON,AAON,sp400,824142
+ACI,Albertsons,sp400,1646972
+ACM,AECOM,sp400,868857
+ADC,Agree Realty,sp400,917251
+AEIS,Advanced Energy,sp400,927003
+AFG,American Financial Group,sp400,1042046
+AGCO,AGCO,sp400,880266
+AGNC,AGNC Investment,sp400,1423689
+AHR,American Healthcare REIT,sp400,1632970
+AIT,Applied Industrial Technologies,sp400,109563
+ALGM,Allegro MicroSystems,sp400,866291
+ALK,Alaska Air Group,sp400,766421
+ALLY,Ally Financial,sp400,40729
+ALSN,Allison Transmission,sp400,1411207
+ALV,Autoliv,sp400,1034670
+AM,Antero Midstream,sp400,1623925
+AMG,Affiliated Managers Group,sp400,1004434
+AMH,American Homes 4 Rent,sp400,1562401
+AMKR,Amkor Technology,sp400,1047127
+AN,AutoNation,sp400,350698
+ANF,Abercrombie & Fitch,sp400,1018840
+APG,APi Group,sp400,1796209
+APPF,AppFolio,sp400,1433195
+AR,Antero Resources,sp400,1433270
+ARMK,Aramark,sp400,1584509
+ARW,Arrow Electronics,sp400,7536
+ARWR,Arrowhead Pharmaceuticals,sp400,879407
+ASB,Associated Bank,sp400,7789
+ASH,Ashland Global,sp400,1674862
+ATI,ATI Inc.,sp400,1018963
+ATR,AptarGroup,sp400,896622
+AVAV,AeroVironment,sp400,1368622
+AVNT,Avient,sp400,1122976
+AVT,Avnet,sp400,8858
+AVTR,Avantor,sp400,1722482
+AXTA,Axalta,sp400,1616862
+AYI,Acuity Brands,sp400,1144215
+BAH,Booz Allen Hamilton,sp400,1443646
+BBWI,"Bath & Body Works, Inc.",sp400,701985
+BC,Brunswick,sp400,14930
+BCO,Brink's,sp400,78890
+BDC,Belden Inc.,sp400,913142
+BHF,Brighthouse Financial,sp400,1685040
+BILL,Bill Holdings,sp400,1786352
+BIO,Bio-Rad Laboratories,sp400,12208
+BJ,BJ's Wholesale Club,sp400,1531152
+BMRN,BioMarin Pharmaceutical,sp400,1048477
+BRKR,Bruker,sp400,1109354
+BROS,Dutch Bros Inc.,sp400,1866581
+BRX,Brixmor Property Group,sp400,1581068
+BSY,Bentley Systems,sp400,1031308
+BTSG,BrightSpring Health Services,sp400,1865782
+BURL,Burlington Stores,sp400,1579298
+BWA,BorgWarner,sp400,908255
+BWXT,BWX Technologies,sp400,1486957
+BYD,Boyd Gaming,sp400,906553
+CACI,CACI International,sp400,16058
+CAR,Avis Budget Group,sp400,723612
+CART,Maplebear Inc.,sp400,1579091
+CAVA,Cava Group,sp400,1639438
+CBSH,Commerce Bancshares,sp400,22356
+CBT,Cabot Corp,sp400,16040
+CCK,Crown Holdings,sp400,1219601
+CDE,Coeur Mining,sp400,215466
+CDP,COPT Defense Properties,sp400,860546
+CELH,Celsius Holdings,sp400,1341766
+CFR,Frost Bank,sp400,39263
+CG,Carlyle Group (The),sp400,1527166
+CGNX,Cognex,sp400,851205
+CHDN,Churchill Downs Inc.,sp400,20212
+CHE,Chemed Corp.,sp400,19584
+CHH,Choice Hotels,sp400,1046311
+CHRD,Chord Energy,sp400,1486159
+CHWY,Chewy,sp400,1766502
+CHYM,Chime Financial,sp400,1795586
+CLF,Cleveland-Cliffs,sp400,764065
+CLH,Clean Harbors,sp400,822818
+CMC,Commercial Metals,sp400,22444
+CNH,CNH Industrial,sp400,1567094
+CNM,Core & Main,sp400,1856525
+CNO,CNO Financial Group,sp400,1224608
+CNX,CNX Resources,sp400,1070412
+COKE,Coca-Cola Consolidated,sp400,317540
+COLB,Columbia Banking System,sp400,887343
+COLM,Columbia Sportswear,sp400,1050797
+CORT,Corcept Therapeutics,sp400,1088856
+CR,Crane,sp400,1944013
+CRBG,Corebridge Financial,sp400,1889539
+CROX,Crocs,sp400,1334036
+CRS,Carpenter Technology,sp400,17843
+CRUS,Cirrus Logic,sp400,772406
+CSL,Carlisle Companies,sp400,790051
+CTRE,CareTrust REIT,sp400,1590717
+CTVA,Corteva,sp400,1755672
+CUBE,CubeSmart,sp400,1298675
+CUZ,Cousins Properties,sp400,25232
+CVLT,CommVault Systems,sp400,1169561
+CW,Curtiss-Wright,sp400,26324
+CXT,Crane NXT,sp400,25445
+CYTK,Cytokinetics,sp400,1061983
+DAR,Darling Ingredients,sp400,916540
+DBX,Dropbox,sp400,1467623
+DCI,Donaldson Company,sp400,29644
+DINO,HF Sinclair,sp400,1915657
+DKS,Dick's Sporting Goods,sp400,1089063
+DLB,Dolby,sp400,1308547
+DOCN,DigitalOcean,sp400,1582961
+DOCS,Doximity,sp400,1516513
+DOCU,Docusign,sp400,1261333
+DT,Dynatrace,sp400,1773383
+DTM,DT Midstream,sp400,1842022
+DUOL,Duolingo,sp400,1562088
+DY,Dycom Industries,sp400,67215
+EAT,Brinker International,sp400,703351
+EEFT,Euronet Worldwide,sp400,1029199
+EGP,EastGroup Properties,sp400,49600
+EHC,Encompass Health,sp400,785161
+ELAN,Elanco,sp400,1739104
+ELF,e.l.f. Beauty,sp400,1600033
+ELS,Equity Lifestyle Properties,sp400,895417
+ENS,EnerSys,sp400,1289308
+ENSG,Ensign Group,sp400,1125376
+ENTG,Entegris,sp400,1101302
+EPR,EPR Properties,sp400,1045450
+EQH,Equitable Holdings,sp400,1333986
+ESAB,ESAB,sp400,1877322
+ESNT,Essent Group Ltd.,sp400,1448893
+EVR,Evercore,sp400,1360901
+EWBC,East West Bancorp,sp400,1069157
+EXEL,Exelixis,sp400,939767
+EXLS,EXL Service,sp400,1297989
+EXP,Eagle Materials,sp400,918646
+EXPO,"Exponent, Inc.",sp400,851520
+FAF,First American Financial Corporation,sp400,1472787
+FBIN,Fortune Brands Innovations,sp400,1519751
+FCFS,FirstCash,sp400,840489
+FCN,FTI Consulting,sp400,887936
+FFIN,First Financial Bankshares,sp400,36029
+FHI,Federated Hermes,sp400,1056288
+FHN,First Horizon,sp400,36966
+FIVE,Five Below,sp400,1177609
+FLG,Flagstar Bank,sp400,910073
+FLR,Fluor,sp400,1124198
+FLS,Flowserve,sp400,30625
+FN,Fabrinet,sp400,1408710
+FNB,FNB Corporation,sp400,37808
+FND,Floor & Decor,sp400,1507079
+FNF,Fidelity National Financial,sp400,1331875
+FORM,FormFactor,sp400,1039399
+FOUR,Shift4,sp400,1794669
+FR,First Industrial Realty Trust,sp400,921825
+FTI,TechnipFMC,sp400,1681459
+G,Genpact,sp400,1398659
+GAP,Gap Inc.,sp400,39911
+GATX,GATX,sp400,40211
+GBCI,Glacier Bancorp,sp400,868671
+GEF,"Greif, Inc.",sp400,43920
+GGG,Graco Inc.,sp400,42888
+GHC,Graham Holdings,sp400,104889
+GKOS,Glaukos,sp400,1192448
+GLPI,Gaming and Leisure Properties,sp400,1575965
+GME,GameStop,sp400,1326380
+GMED,Globus Medical,sp400,1237831
+GNTX,Gentex,sp400,355811
+GPK,Graphic Packaging,sp400,1408075
+GWRE,Guidewire Software,sp400,1528396
+GXO,GXO Logistics,sp400,1852244
+H,Hyatt,sp400,1468174
+HAE,Haemonetics,sp400,313143
+HALO,Halozyme,sp400,1159036
+HGV,Hilton Grand Vacations,sp400,1674168
+HIMS,Hims & Hers Health,sp400,1773751
+HL,Hecla Mining,sp400,719413
+HLI,Houlihan Lokey,sp400,1302215
+HLNE,Hamilton Lane,sp400,1433642
+HOG,Harley-Davidson,sp400,793952
+HOMB,Home BancShares,sp400,1331520
+HQY,HealthEquity,sp400,1428336
+HR,Healthcare Realty Trust,sp400,1360604
+HRB,H&R Block,sp400,12659
+HUBS,HubSpot,sp400,1404655
+HWC,Hancock Whitney,sp400,750577
+HXL,Hexcel,sp400,717605
+HZN,Bright Horizon Energy Corporation,sp400,1130464
+IBOC,Intl Bancshares Corp,sp400,315709
+IDA,Idacorp,sp400,1057877
+IDCC,InterDigital,sp400,1405495
+IESC,IES Holdings,sp400,1048268
+INGR,Ingredion,sp400,1046257
+IPGP,IPG Photonics,sp400,1111928
+IRT,Independence Realty Trust,sp400,1466085
+ITT,ITT Inc.,sp400,216228
+JAZZ,Jazz Pharmaceuticals,sp400,1232524
+JEF,Jefferies,sp400,96223
+JHX,James Hardie Industries,sp400,1159152
+JLL,Jones Lang LaSalle,sp400,1037976
+KBH,KB Home,sp400,795266
+KBR,"KBR, Inc.",sp400,1357615
+KD,Kyndryl,sp400,1867072
+KEX,Kirby Corporation,sp400,56047
+KNF,Knife River Corporation,sp400,1955520
+KNSL,Kinsale Capital Group,sp400,1669162
+KNX,Knight-Swift,sp400,1492691
+KRC,Kilroy Realty Corp,sp400,1025996
+KRG,Kite Realty Group Trust,sp400,1286043
+KRYS,Krystal Biotech,sp400,1711279
+KTOS,Kratos Defense & Security Solutions,sp400,1069258
+LAD,Lithia Motors,sp400,1023128
+LAMR,Lamar Advertising Company,sp400,1090425
+LEA,Lear,sp400,842162
+LECO,Lincoln Electric,sp400,59527
+LFUS,Littelfuse,sp400,889331
+LIVN,LivaNova,sp400,1639691
+LNTH,Lantheus Holdings,sp400,1521036
+LOPE,Grand Canyon Education,sp400,1434588
+LPX,Louisiana-Pacific,sp400,60519
+LSCC,Lattice Semiconductor,sp400,855658
+LSTR,Landstar System,sp400,853816
+M,Macy's,sp400,794367
+MANH,Manhattan Associates,sp400,1056696
+MAT,Mattel,sp400,63276
+MEDP,Medpace,sp400,1668397
+MIDD,Middleby,sp400,769520
+MKSI,MKS Instruments,sp400,1049502
+MLI,Mueller Industries,sp400,89439
+MMS,Maximus Inc.,sp400,1032220
+MOG.A,Moog Inc.,sp400,67887
+MOH,Molina Healthcare,sp400,1179929
+MORN,"Morningstar, Inc.",sp400,1289419
+MP,MP Materials,sp400,1801368
+MSA,MSA Safety,sp400,66570
+MSM,MSC Industrial Direct,sp400,1003078
+MTDR,Matador Resources,sp400,1520006
+MTG,MGIC Investment Corporation,sp400,876437
+MTN,Vail Resorts,sp400,812011
+MTSI,MACOM Technology Solutions,sp400,1493594
+MTZ,MasTec,sp400,15615
+MUR,Murphy Oil,sp400,717423
+MUSA,Murphy USA,sp400,1573516
+MZTI,The Marzetti Company,sp400,57515
+NBIX,Neurocrine Biosciences,sp400,914475
+NEU,NewMarket Corporation,sp400,1282637
+NFG,National Fuel Gas,sp400,70145
+NJR,New Jersey Resources,sp400,356309
+NLY,Annaly Capital Management,sp400,1043219
+NNN,NNN Reit,sp400,751364
+NOV,NOV Inc.,sp400,1021860
+NOVT,Novanta,sp400,1076930
+NTNX,Nutanix,sp400,1618732
+NVST,Envista Holdings,sp400,1757073
+NVT,nVent Electric plc,sp400,1720635
+NXST,Nexstar Media Group,sp400,1142417
+NXT,Nextpower,sp400,1852131
+NYT,New York Times Company,sp400,71691
+OC,Owens Corning,sp400,1370946
+OGE,OGE Energy,sp400,1021635
+OGS,One Gas,sp400,1587732
+OHI,Omega Healthcare Investors,sp400,888491
+OLED,Universal Display,sp400,1005284
+OLLI,Ollie's Bargain Outlet,sp400,1639300
+ONB,Old National Bank,sp400,707179
+ONTO,Onto Innovation,sp400,704532
+OPCH,Option Care Health,sp400,1014739
+ORA,Ormat Technologies,sp400,1296445
+ORI,Old Republic International,sp400,74260
+OSK,Oshkosh,sp400,775158
+OVV,Ovintiv,sp400,1792580
+OZK,Bank OZK,sp400,1569650
+PAG,Penske Automotive Group,sp400,1019849
+PATH,UiPath,sp400,1734722
+PB,Prosperity Bancshares,sp400,1068851
+PBF,PBF Energy,sp400,1534504
+PCTY,Paylocity,sp400,1591698
+PEGA,Pegasystems,sp400,1013857
+PEN,"Penumbra, Inc.",sp400,1321732
+PFGC,Performance Food Group,sp400,1618673
+PII,Polaris,sp400,931015
+PINS,Pinterest,sp400,1506293
+PK,Park Hotels & Resorts,sp400,1617406
+PLNT,Planet Fitness,sp400,1637207
+PNFP,Pinnacle Financial Partners,sp400,2082866
+POR,Portland General Electric,sp400,784977
+POST,Post Holdings,sp400,1530950
+PPC,Pilgrim's Pride,sp400,802481
+PR,Permian Resources,sp400,1658566
+PRI,Primerica,sp400,1475922
+PSN,Parsons Corporation,sp400,275880
+PVH,PVH Corp.,sp400,78239
+QLYS,Qualys,sp400,1107843
+R,Ryder,sp400,85961
+RBA,RB Global,sp400,1046102
+RBC,RBC Bearings,sp400,1324948
+REXR,Rexford Industrial Realty,sp400,1571283
+RGA,Reinsurance Group of America,sp400,898174
+RGEN,Repligen,sp400,730272
+RGLD,Royal Gold,sp400,85535
+RH,RH,sp400,1528849
+RLI,RLI Corp.,sp400,84246
+RMBS,Rambus,sp400,917273
+RNR,RenaissanceRe,sp400,913144
+ROIV,Roivant Sciences,sp400,1635088
+RPM,RPM International,sp400,110621
+RRC,Range Resources,sp400,315852
+RRX,Regal Rexnord,sp400,82811
+RS,"Reliance, Inc.",sp400,861884
+RYAN,Ryan Specialty,sp400,1849253
+RYN,Rayonier,sp400,52827
+SAIA,Saia,sp400,1177702
+SAIC,Science Applications Intl Corp,sp400,1571123
+SANM,Sanmina Corporation,sp400,897723
+SARO,StandardAero,sp400,2025410
+SBRA,Sabra Health Care REIT,sp400,1492298
+SCI,Service Corp Intl,sp400,89089
+SEIC,SEI Investments Company,sp400,350894
+SF,Stifel,sp400,720672
+SFM,Sprouts Farmers Market,sp400,1575515
+SGI,Somnigroup International,sp400,1206264
+SHC,Sotera Health,sp400,1822479
+SIGI,Selective Insurance Group,sp400,230557
+SIRI,SiriusXM,sp400,908937
+SITM,SiTime,sp400,1451809
+SLAB,Silicon Labs,sp400,1038074
+SLGN,Silgan Holdings,sp400,849869
+SLM,SLM Corp,sp400,1032033
+SMG,Scotts Miracle-Gro Company,sp400,825542
+SMTC,Semtech,sp400,88941
+SN,SharkNinja,sp400,1957132
+SNX,TD Synnex,sp400,1177394
+SOLS,Solstice Advanced Materials,sp400,2064953
+SON,Sonoco,sp400,91767
+SPXC,SPX Technologies,sp400,88205
+SR,Spire,sp400,1126956
+SSB,South State Bank,sp400,764038
+SSD,Simpson Manufacturing,sp400,920371
+ST,Sensata Technologies,sp400,1477294
+STAG,STAG Industrial,sp400,1479094
+STRL,Sterling Infrastructure,sp400,874238
+STWD,Starwood Property Trust,sp400,1465128
+SUI,Sun Communities,sp400,912593
+SWX,Southwest Gas Corp,sp400,1692115
+SYNA,Synaptics,sp400,817720
+TEX,Terex,sp400,97216
+THC,Tenet Health,sp400,70318
+THG,Hanover Insurance,sp400,944695
+THO,Thor Industries,sp400,730263
+TKR,Timken,sp400,98362
+TLN,Talen Energy,sp400,1622536
+TNL,Travel + Leisure Co.,sp400,1361658
+TOL,Toll Brothers,sp400,794170
+TOST,"Toast, Inc.",sp400,1650164
+TREX,Trex,sp400,1069878
+TRU,TransUnion,sp400,1552033
+TTC,Toro,sp400,737758
+TTEK,Tetra Tech,sp400,831641
+TTMI,TTM Technologies,sp400,1116942
+TXNM,TXNM Energy,sp400,1108426
+TXRH,Texas Roadhouse,sp400,1289460
+UBSI,United Bankshares,sp400,729986
+UFPI,UFP Industries,sp400,912767
+UGI,UGI Corp,sp400,884614
+ULS,UL Solutions,sp400,1901440
+UMBF,UMB Financial Corp.,sp400,101382
+UNM,Unum,sp400,5513
+USFD,US Foods,sp400,1665918
+UTHR,United Therapeutics,sp400,1082554
+VAL,Valaris,sp400,314808
+VC,Visteon,sp400,1111335
+VFC,VF Corporation,sp400,103379
+VIAV,Viavi Solutions,sp400,912093
+VICR,Vicor Corporation,sp400,751978
+VLY,Valley Bank,sp400,714310
+VMI,Valmont Industries,sp400,102729
+VNO,Vornado Realty Trust,sp400,899689
+VNOM,Viper Energy,sp400,2074176
+VNT,Vontier,sp400,1786842
+VOYA,Voya Financial,sp400,1535929
+VVV,Valvoline,sp400,1674910
+WAL,Western Alliance Bancorporation,sp400,1212545
+WCC,WESCO International,sp400,929008
+WEX,WEX Inc.,sp400,1309108
+WFRD,Weatherford International,sp400,1603923
+WH,Wyndham Hotels & Resorts,sp400,1722684
+WHR,Whirlpool Corporation,sp400,106640
+WING,Wingstop,sp400,1636222
+WLK,Westlake Corporation,sp400,1262823
+WMG,Warner Music Group,sp400,1319161
+WMS,Advanced Drainage Systems,sp400,1604028
+WPC,W. P. Carey,sp400,1025378
+WSO,Watsco,sp400,105016
+WTFC,Wintrust Financial,sp400,1015328
+WTRG,Essential Utilities,sp400,78128
+WTS,Watts Water Technologies,sp400,795403
+WWD,"Woodward, Inc.",sp400,108312
+XPO,"XPO, Inc.",sp400,1166003
+XRAY,Dentsply Sirona,sp400,818479
+YETI,Yeti Holdings,sp400,1670592
+ZION,Zions Bancorporation,sp400,109380

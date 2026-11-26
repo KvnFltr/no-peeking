@@ -17,6 +17,16 @@ YES_WORDS = ("Yes", " Yes", "yes", " yes", "YES")
 NO_WORDS = ("No", " No", "no", " no", "NO")
 
 
+def chat_text(tok, messages: list[dict[str, str]]) -> str:
+    """Chat prompt ending with the assistant turn. ``enable_thinking=False`` turns off Qwen3-style thinking
+    blocks so the first generated token is the answer; templates that do not know the flag ignore it."""
+    if not tok.chat_template:
+        return "\n\n".join(m["content"] for m in messages) + "\nAnswer:"
+    return tok.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
+    )
+
+
 def load_model(model_id: str, device: str | None = None, dtype: str = "auto", adapter: str | None = None):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -87,11 +97,7 @@ class YesNoScorer:
         return sorted(ids)
 
     def render(self, messages: list[dict[str, str]]) -> list[int]:
-        if self.tok.chat_template:
-            text = self.tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        else:
-            text = "\n\n".join(m["content"] for m in messages) + "\nAnswer:"
-        return self.tok.encode(text, add_special_tokens=False)
+        return self.tok.encode(chat_text(self.tok, messages), add_special_tokens=False)
 
     def encode(self, make_messages: Callable[[int], list[dict[str, str]]]) -> list[int]:
         """Shrink the filing text (not the question) until the prompt fits ``max_input_tokens``."""

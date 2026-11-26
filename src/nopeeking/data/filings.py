@@ -23,6 +23,7 @@ EVENT_TYPES: list[tuple[str, frozenset[str]]] = [
     ("other", frozenset({"8.01"})),
 ]
 EVENT_PRIORITY = {name: i for i, (name, _) in enumerate(EVENT_TYPES)}
+CACHE_CHARS = 40_000
 
 
 def classify_event(items: str | None) -> str | None:
@@ -133,7 +134,12 @@ def fetch_filing_text(client: SecClient, cik: int, accession: str, text_cache: P
     text_ex99 = ""
     if ex99:
         text_ex99 = html_to_text(client.get("https://www.sec.gov" + ex99["href"], use_cache=False))
-    result: dict[str, str | bool] = {"text_8k": text_8k, "text_ex99": text_ex99, "has_ex99": bool(ex99)}
+    # cap what is cached: the dataset keeps at most `max_text_chars` (20k) of the combined text anyway
+    result: dict[str, str | bool] = {
+        "text_8k": text_8k[:CACHE_CHARS],
+        "text_ex99": text_ex99[:CACHE_CHARS],
+        "has_ex99": bool(ex99),
+    }
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_bytes(gzip.compress(json.dumps(result).encode()))

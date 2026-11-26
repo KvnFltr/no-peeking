@@ -64,9 +64,62 @@ def _method_rows(baselines: dict, probes: dict[str, dict]) -> list[tuple[str, di
     return rows
 
 
+def _model_meta() -> dict[str, dict]:
+    path = Path("configs/models.yaml")
+    if not path.exists():
+        return {}
+    import yaml
+
+    return (yaml.safe_load(path.read_text(encoding="utf-8")) or {}).get("models", {})
+
+
+def leaderboard_md(baselines: dict, probes: dict[str, dict]) -> list[str]:
+    """Models ranked by post-cutoff AUC (the number that cannot be inflated by memory), with their DiD."""
+    meta = _model_meta()
+    rows = []
+    for p in probes.values():
+        post = p["metrics"]["original"].get("test_post", {})
+        if not post:
+            continue
+        m = meta.get(p["model"], {})
+        gap = p.get("gap", {}).get("auc", {})
+        rows.append((post.get("auc", float("nan")), p["model"], m, post, gap))
+    tfidf = baselines.get("methods", {}).get("tfidf_lr", {}).get("test_post")
+    if tfidf:
+        rows.append(
+            (
+                tfidf["auc"],
+                "TF-IDF + LR (trained on 2018-22)",
+                {},
+                tfidf,
+                baselines.get("tfidf_lr_gap", {}).get("auc", {}),
+            )
+        )
+    if not rows:
+        return []
+    rows.sort(key=lambda r: -r[0] if r[0] == r[0] else 0)
+    out = [
+        "### Leaderboard: post-cutoff test",
+        "",
+        "Ranked by AUC on filings published after every model's release (unseen by construction). "
+        "DiD > 0 means the model does better on pre-cutoff filings only when it can see who and when: recall.",
+        "",
+        "| # | model | released | params | AUC post-cutoff [95% CI] | Brier | DiD (memorization) [95% CI] |",
+        "|---:|---|---|---:|---|---|---|",
+    ]
+    for i, (_, name, m, post, gap) in enumerate(rows, 1):
+        params = f"{m['params_b']}B" if "params_b" in m else ""
+        out.append(
+            f"| {i} | {name} | {m.get('released', '')} | {params} | {_ci(post, 'auc')} | {_f(post.get('brier'))} "
+            f"| {_ci(gap, 'did') if gap else '–'} |"
+        )
+    return [*out, ""]
+
+
 def markdown_summary(cfg: DataConfig) -> str:
     stats, baselines, probes, flog = _load(cfg)
-    lines = [
+    lines = leaderboard_md(baselines, probes)
+    lines += [
         f"Dataset `{cfg.name}`: {stats['n']} filings, {stats['first_filing']} to {stats['last_filing']}. "
         f"Split sizes: " + ", ".join(f"{k} {v}" for k, v in stats["splits"].items()) + ".",
         "",
@@ -222,6 +275,12 @@ def hero_figure(cfg: DataConfig, path: Path) -> Path | None:
     fig.tight_layout()
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=160, facecolor=SURFACE, bbox_inches="tight")
+    try:  # vector copy for the paper; the PNG is enough if the PDF backend cannot load
+        fig.savefig(path.with_suffix(".pdf"), facecolor=SURFACE, bbox_inches="tight")
+    except Exception as err:
+        import logging
+
+        logging.getLogger(__name__).warning("hero.pdf not written (%r); the paper uses hero.png", err)
     plt.close(fig)
     return path
 
@@ -233,8 +292,15 @@ def build_report(cfg: DataConfig, readme: Path | None = None) -> list[Path]:
     written = []
     (root / "summary.md").write_text(summary, encoding="utf-8")
     written.append(root / "summary.md")
-    (root / "macros.tex").write_text(latex_macros(cfg), encoding="utf-8")
-    written.append(root / "macros.tex")
+    from nopeeking.eval.latex import write_latex
+
+    stats, baselines, probes, flog = _load(cfg)
+    gaps = (
+        [("TF-IDF + LR (control)", baselines["tfidf_lr_gap"]["auc"])] if baselines.get("tfidf_lr_gap") else []
+    )
+    gaps += [(p["model"], p["gap"]["auc"]) for p in probes.values() if p.get("gap")]
+    trained = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((root / "methods").glob("*.json"))]
+    written += write_latex(cfg, _method_rows(baselines, probes), gaps, trained, stats, flog)
     fig = hero_figure(cfg, root / "figures" / "hero.png")
     if fig:
         written.append(fig)

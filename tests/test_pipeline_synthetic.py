@@ -41,6 +41,7 @@ def _make(tmp_path):
                     "id": f"{split}-{k}",
                     "split": split,
                     "ticker": t,
+                    "cik": 1000 + k % 8,
                     "company": f"Company {t} Inc.",
                     "aliases": json.dumps([f"Company {t} Inc."]),
                     "tickers_all": json.dumps([t]),

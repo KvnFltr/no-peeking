@@ -1,0 +1,14 @@
+# Models scored by the look-ahead probe. `released` (year-month of the public weights) must be before the start of
+# test_post (2025-07) for the post-cutoff test to be unseen. `dtype`: what fits a free 16 GB T4.
+models:
+  Qwen/Qwen2.5-0.5B-Instruct:   {family: Qwen2.5, params_b: 0.5, released: 2024-09, dtype: float16}
+  Qwen/Qwen2.5-1.5B-Instruct:   {family: Qwen2.5, params_b: 1.5, released: 2024-09, dtype: float16}
+  Qwen/Qwen2.5-3B-Instruct:     {family: Qwen2.5, params_b: 3.1, released: 2024-09, dtype: float16}
+  Qwen/Qwen2.5-7B-Instruct:     {family: Qwen2.5, params_b: 7.6, released: 2024-09, dtype: 4bit}
+  Qwen/Qwen3-0.6B:              {family: Qwen3, params_b: 0.6, released: 2025-04, dtype: float16}
+  Qwen/Qwen3-1.7B:              {family: Qwen3, params_b: 1.7, released: 2025-04, dtype: float16}
+  Qwen/Qwen3-4B:                {family: Qwen3, params_b: 4.0, released: 2025-04, dtype: float16}
+  Qwen/Qwen3-8B:                {family: Qwen3, params_b: 8.2, released: 2025-04, dtype: 4bit}
+  HuggingFaceTB/SmolLM2-1.7B-Instruct: {family: SmolLM2, params_b: 1.7, released: 2024-11, dtype: float16}
+  microsoft/Phi-3.5-mini-instruct:     {family: Phi-3.5, params_b: 3.8, released: 2024-08, dtype: float16}
+  allenai/OLMo-2-1124-7B-Instruct:     {family: OLMo 2, params_b: 7.3, released: 2024-11, dtype: 4bit}

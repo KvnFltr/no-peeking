@@ -1,0 +1,20 @@
+name: Paper
+on:
+  push:
+    branches: [main]
+    paths: ["paper/**", "results/**"]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: paper
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: no-peeking-paper
+          path: paper/main.pdf

@@ -1,3 +1,11 @@
+### Leaderboard: post-cutoff test
+
+Ranked by AUC on filings published after every model's release (unseen by construction). DiD > 0 means the model does better on pre-cutoff filings only when it can see who and when: recall.
+
+| # | model | released | params | AUC post-cutoff [95% CI] | Brier | DiD (memorization) [95% CI] |
+|---:|---|---|---:|---|---|---|
+| 1 | TF-IDF + LR (trained on 2018-22) |  |  | 0.532 [0.418, 0.643] | 0.262 | -0.001 [-0.051, 0.051] |
+
 Dataset `pilot`: 493 filings, 2018-01-09 to 2026-11-20. Split sizes: train 248, test_pre 96, val 50, test_post 99.
 
 **Filter log**

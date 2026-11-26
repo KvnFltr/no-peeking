@@ -28,3 +28,4 @@ paper/*.synctex.gz
 # local secrets / contact details
 .env
 logs_*.txt
+paper/build/

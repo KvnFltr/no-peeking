@@ -1,0 +1,23 @@
+# NoPeek-8K v1: S&P 500 + S&P 400, stratified sample sized for a laptop (~20k filings, ~60k polite EDGAR requests).
+# Test splits are large enough for AUC CIs of about +/-0.02; train is a random sample of the 2018-2022 pool.
+name: v1
+seed: 0
+indexes: [sp500, sp400]
+n_firms: null
+start: "2018-01-01"
+end: "2026-11-25"     # frozen snapshot date for the paper (the monthly refresh uses configs/full.yaml)
+quota:
+  train: 8000
+  test_pre: 4000
+  val: 2000
+  test_post: 6000
+splits:
+  train: ["2018-01-01", "2022-12-31"]
+  test_pre: ["2023-01-01", "2023-12-31"]
+  val: ["2024-01-01", "2024-12-31"]
+  test_post: ["2025-07-01", null]
+horizon: 3
+benchmark: SPY
+winsor: [0.01, 0.99]
+workers: 6
+sec_max_rps: 8

@@ -77,7 +77,7 @@ def check(completion: str, row: pd.Series, variant: str, min_precision: float) -
 def generate_rationales(config_path: str) -> str:
     import torch
 
-    from nopeeking.eval.llm import load_model
+    from nopeeking.eval.llm import chat_text, load_model
 
     run, cfg = load_run(config_path)
     rows = train_rows(cfg, tuple(run.get("splits", ["train"])))
@@ -99,11 +99,7 @@ def generate_rationales(config_path: str) -> str:
         for i in range(0, len(todo), bs):
             batch = todo.iloc[i : i + bs]
             prompts = [
-                tok.apply_chat_template(
-                    build_messages(r, variant, run.get("max_chars", 6000), cfg.horizon),
-                    tokenize=False,
-                    add_generation_prompt=True,
-                )
+                chat_text(tok, build_messages(r, variant, run.get("max_chars", 6000), cfg.horizon))
                 for _, r in batch.iterrows()
             ]
             enc = tok(
