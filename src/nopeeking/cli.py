@@ -42,6 +42,13 @@ def _cmd_baselines(args: argparse.Namespace) -> None:
     print(f"wrote {out}")
 
 
+def _parse_shard(text: str | None) -> tuple[int, int] | None:
+    if not text:
+        return None
+    i, n = (int(x) for x in text.split("/"))
+    return i, n
+
+
 def _cmd_probe(args: argparse.Namespace) -> None:
     from nopeeking.config import load_config
     from nopeeking.eval.probe import run_probe
@@ -57,6 +64,7 @@ def _cmd_probe(args: argparse.Namespace) -> None:
         batch_size=args.batch_size,
         dtype=args.dtype,
         with_market=not args.no_market,
+        shard=_parse_shard(args.shard),
     )
     print(f"wrote {out}")
 
@@ -120,6 +128,7 @@ def build_parser() -> argparse.ArgumentParser:
     probe.add_argument("--max-input-tokens", type=int, default=768)
     probe.add_argument("--no-market", action="store_true", help="skip prices and the long-short portfolio")
     probe.add_argument("--batch-size", type=int, default=4)
+    probe.add_argument("--shard", default=None, help="I/N: score every N-th prompt from I, metrics skipped")
     probe.set_defaults(func=_cmd_probe, log_name="probe")
 
     rep = sub.add_parser("report", help="tables, hero figure, LaTeX macros, README results block")

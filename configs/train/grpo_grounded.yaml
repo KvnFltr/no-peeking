@@ -1,5 +1,5 @@
 # GRPO from the SFT-hindsight adapter. Rewards: {outcome: 1.0, grounding: 0.5}
-dataset_config: configs/pilot.yaml
+dataset_config: configs/v1.yaml
 base_model: Qwen/Qwen2.5-0.5B-Instruct
 init_adapter: outputs/sft_hindsight-qwen0.5b
 output_dir: outputs/grpo_grounded-qwen0.5b

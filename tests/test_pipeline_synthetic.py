@@ -95,3 +95,42 @@ def test_baselines_and_report(tmp_path):
     assert "old" not in text and "tfidf_lr" in text and text.endswith("outro\n")
     assert any(str(p).endswith("hero.png") for p in written)
     assert "\\newcommand" in (cfg.run_results_dir / "macros.tex").read_text(encoding="utf-8")
+
+
+class _FakeScorer:
+    """Stands in for the language model: scores the filing text, so no download or GPU is needed."""
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def encode(self, build):
+        msgs = build(4000)
+        return msgs[-1]["content"]
+
+    def score(self, texts, batch_size=4):
+        p = np.array([0.7 if "record revenue" in t else 0.3 for t in texts])
+        return p, np.ones(len(texts))
+
+
+def test_probe_shards_merge_to_the_unsharded_result(tmp_path, monkeypatch):
+    import nopeeking.eval.llm as llm
+    from nopeeking.eval.probe import run_probe
+
+    monkeypatch.setattr(llm, "YesNoScorer", _FakeScorer)
+    cfg = _make(tmp_path)
+    pred = cfg.run_results_dir / "predictions" / "probe__fake__512.parquet"
+    parts = []
+    for i in range(3):
+        assert run_probe(cfg, "fake", max_input_tokens=512, with_market=False, shard=(i, 3)) == str(pred)
+        parts.append(pd.read_parquet(pred))
+        pred.unlink()
+    merged = pd.concat(parts, ignore_index=True)
+    n_jobs = 60 + 60 + 40 + 60 + 60  # original for 3 splits + anonymized for the 2 probe splits
+    assert len(merged) == n_jobs and not merged.duplicated(["id", "variant"]).any()
+
+    merged.to_parquet(pred, index=False)
+    sharded = json.loads(Path(run_probe(cfg, "fake", max_input_tokens=512, with_market=False)).read_text())
+    pred.unlink()
+    direct = json.loads(Path(run_probe(cfg, "fake", max_input_tokens=512, with_market=False)).read_text())
+    assert sharded["gap"]["auc"]["did"] == direct["gap"]["auc"]["did"]
+    assert sharded["metrics"]["original"]["test_post"]["auc"] > 0.6

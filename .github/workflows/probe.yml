@@ -1,5 +1,9 @@
-# Score a small model with the look-ahead probe on CPU runners (no GPU needed for <= 1.5B parameters).
-# Each split is a separate job; predictions are uploaded as artifacts and merged by `nopeeking report` locally.
+# Score an open model with the look-ahead probe on free CPU runners (no GPU needed up to ~3B parameters).
+# Work is spread over split x shard jobs; each uploads its cached predictions as an artifact, and
+# `python scripts/merge_probe_run.py <run-id> ...` merges them and computes the metrics locally.
+# Measured on a 4-vCPU runner at 512 tokens: ~3.4 s per prompt for Qwen2.5-0.5B (2,000 prompts per test split),
+# growing roughly with the non-embedding parameter count; pick `shards` so that one job stays well under the
+# 6-hour limit (1000 filings: 0.5B -> 1, 1.5B -> 3, 3B -> 6).
 name: Probe (CPU)
 on:
   workflow_dispatch:
@@ -16,18 +20,35 @@ on:
         description: Prompt budget in tokens
         required: true
         default: "512"
+      shards:
+        description: Jobs per split
+        required: true
+        default: "4"
+      dtype:
+        description: auto (float32 on CPU) or bfloat16 for models that do not fit in 16 GB
+        required: true
+        default: auto
       data_release:
         description: Release tag holding the dataset parquet
         required: true
         default: data-v1
 jobs:
-  probe:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 350
+    outputs:
+      shards: ${{ steps.m.outputs.shards }}
+    steps:
+      - id: m
+        run: python3 -c "import json; print('shards=' + json.dumps(list(range(int('${{ inputs.shards }}')))))" >> "$GITHUB_OUTPUT"
+  probe:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
     strategy:
       fail-fast: false
       matrix:
         split: [test_pre, test_post, val]
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,11 +67,12 @@ jobs:
       - name: Probe
         run: >
           nopeeking -v probe "${{ inputs.model }}" --config configs/v1.yaml --splits ${{ matrix.split }}
-          --limit ${{ inputs.limit }} --max-input-tokens ${{ inputs.max_input_tokens }} --device cpu --batch-size 4 --no-market
+          --limit ${{ inputs.limit }} --max-input-tokens ${{ inputs.max_input_tokens }} --device cpu
+          --dtype ${{ inputs.dtype }} --batch-size 4 --no-market --shard ${{ matrix.shard }}/${{ inputs.shards }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: probe-${{ matrix.split }}
+          name: probe-${{ matrix.split }}-${{ matrix.shard }}
           path: |
             results/v1/predictions/probe__*.parquet
             logs/probe.log

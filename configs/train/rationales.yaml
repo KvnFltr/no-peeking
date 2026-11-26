@@ -1,5 +1,5 @@
 # Teacher rationales (Kaggle 2xT4: Qwen2.5-7B-Instruct in 4-bit).
-dataset_config: configs/pilot.yaml
+dataset_config: configs/v1.yaml
 teacher: Qwen/Qwen2.5-7B-Instruct
 teacher_dtype: 4bit
 splits: [train]

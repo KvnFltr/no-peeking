@@ -1,5 +1,5 @@
 # SFT (rationales, control rationales). One epoch, effective batch 16 (step budgets are equalised after the pilot; see PREREGISTRATION.md).
-dataset_config: configs/pilot.yaml
+dataset_config: configs/v1.yaml
 base_model: Qwen/Qwen2.5-0.5B-Instruct
 data: rationales
 rationale_variant: control

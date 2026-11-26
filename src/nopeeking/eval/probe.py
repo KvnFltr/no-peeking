@@ -97,7 +97,13 @@ def run_probe(
     dtype: str = "auto",
     adapter: str | None = None,
     with_market: bool = True,
+    shard: tuple[int, int] | None = None,
 ) -> str:
+    """Score (and cache) every pending prompt, then write the probe summary JSON.
+
+    ``shard=(i, n)`` only scores every n-th prompt starting at i and returns the cache path without
+    computing metrics, so that one model can be spread over several machines and merged afterwards.
+    """
     from nopeeking.eval.evaluate import evaluate, load_market
     from nopeeking.eval.llm import YesNoScorer
     from nopeeking.prompts import direct_messages
@@ -110,6 +116,11 @@ def run_probe(
     df = df.reset_index(drop=True)
     jobs = [(r["id"], "original") for _, r in df.iterrows()]
     jobs += [(r["id"], "anonymized") for _, r in df.iterrows() if r["split"] in PROBE_SPLITS]
+    if shard:
+        i, n = shard
+        if not 0 <= i < n:
+            raise ValueError(f"shard index {i} outside 0..{n - 1}")
+        jobs = jobs[i::n]
 
     slug = model_slug(model_id, adapter)
     pred_dir = cfg.run_results_dir / "predictions"
@@ -158,6 +169,8 @@ def run_probe(
                 elapsed / n_done * (len(pending) - n_done) / 60,
             )
 
+    if shard:
+        return str(cache_path)
     done = done[done["id"].isin(df["id"])]
     wide = done.pivot_table(index="id", columns="variant", values="p_up").reset_index()
     try:

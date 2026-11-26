@@ -7,8 +7,9 @@ Everything here is a draft for the author to post from their own accounts. Repla
 
 * Build: `cd paper && latexmk -pdf main.tex` (or download the `Paper` workflow artifact), then
   `python scripts/make_arxiv.py --results results/v1 --bbl paper/build/main.bbl` creates `outputs/arxiv.tar.gz`.
-* Categories: primary **cs.CL**, cross-list **q-fin.CP** and **cs.LG**. A first submission to cs.CL needs an
-  endorsement (arxiv.org/auth/endorse): ask a supervisor or any author with a recent cs.CL paper.
+* Categories: primary **cs.CL**, cross-list **q-fin.CP** and **cs.LG**. A first-time submitter may be asked for an
+  endorsement (arxiv.org/auth/endorse), depending on the category and account: a supervisor or any author with recent
+  cs.CL papers can endorse.
 * Licence: CC BY 4.0. Comments field: "Code and data: https://github.com/KvnFltr/no-peeking".
 * After the arXiv ID exists: add it to `CITATION.cff`, the README badge and the Hugging Face dataset card.
 
