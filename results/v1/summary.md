@@ -10,7 +10,8 @@ Ranked by AUC on filings published after every model's release (unseen by constr
 | 4 | Qwen/Qwen2.5-0.5B-Instruct | 2024-09 | 0.5B | 0.517 [0.482, 0.552] | 0.411 | -0.033 [-0.081, 0.011] |
 | 5 | Qwen/Qwen3-1.7B | 2025-04 | 1.7B | 0.516 [0.480, 0.551] | 0.400 | 0.024 [-0.010, 0.058] |
 | 6 | Qwen/Qwen2.5-3B-Instruct | 2024-09 | 3.1B | 0.515 [0.480, 0.550] | 0.474 | 0.033 [-0.007, 0.074] |
-| 7 | Qwen/Qwen2.5-1.5B-Instruct | 2024-09 | 1.5B | 0.506 [0.469, 0.543] | 0.448 | -0.001 [-0.030, 0.030] |
+| 7 | Qwen/Qwen3-4B | 2025-04 | 4.0B | 0.513 [0.476, 0.549] | 0.459 | -0.014 [-0.046, 0.017] |
+| 8 | Qwen/Qwen2.5-1.5B-Instruct | 2024-09 | 1.5B | 0.506 [0.469, 0.543] | 0.448 | -0.001 [-0.030, 0.030] |
 
 Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, test_pre 3979, val 1992, test_post 5864.
 
@@ -45,6 +46,7 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen2.5-3B-Instruct (zero-shot) | 1000 | 0.515 [0.480, 0.550] | 0.500 [0.500, 0.500] | 0.526 [0.495, 0.558] | 0.474 [0.442, 0.505] | 0.474 | 0.013 [-0.047, 0.072] |
 | Qwen/Qwen3-0.6B (zero-shot) | 1000 | 0.525 [0.489, 0.559] | 0.521 [0.496, 0.544] | 0.537 [0.506, 0.567] | 0.301 [0.285, 0.318] | 0.201 | 0.055 [-0.007, 0.117] |
 | Qwen/Qwen3-1.7B (zero-shot) | 1000 | 0.516 [0.480, 0.551] | 0.518 [0.490, 0.546] | 0.507 [0.477, 0.539] | 0.400 [0.375, 0.427] | 0.358 | 0.056 [-0.009, 0.122] |
+| Qwen/Qwen3-4B (zero-shot) | 1000 | 0.513 [0.476, 0.549] | 0.510 [0.501, 0.521] | 0.535 [0.505, 0.568] | 0.459 [0.427, 0.489] | 0.460 | 0.017 [-0.049, 0.082] |
 
 **pre-cutoff test (2023)**: metric [95% bootstrap CI]
 
@@ -60,6 +62,7 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen2.5-3B-Instruct (zero-shot) | 1000 | 0.536 [0.501, 0.572] | 0.500 [0.500, 0.500] | 0.502 [0.471, 0.532] | 0.498 [0.468, 0.529] | 0.498 | 0.040 [-0.022, 0.104] |
 | Qwen/Qwen3-0.6B (zero-shot) | 1000 | 0.488 [0.452, 0.523] | 0.489 [0.464, 0.513] | 0.490 [0.459, 0.521] | 0.322 [0.306, 0.339] | 0.239 | -0.024 [-0.085, 0.039] |
 | Qwen/Qwen3-1.7B (zero-shot) | 1000 | 0.506 [0.472, 0.542] | 0.485 [0.461, 0.510] | 0.484 [0.453, 0.516] | 0.425 [0.400, 0.451] | 0.401 | -0.006 [-0.070, 0.059] |
+| Qwen/Qwen3-4B (zero-shot) | 1000 | 0.496 [0.461, 0.532] | 0.500 [0.497, 0.503] | 0.502 [0.471, 0.532] | 0.498 [0.468, 0.529] | 0.499 | -0.017 [-0.079, 0.047] |
 
 **val (2024)**: metric [95% bootstrap CI]
 
@@ -75,6 +78,7 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen2.5-3B-Instruct (zero-shot) | 1000 | 0.486 [0.453, 0.520] | 0.500 [0.500, 0.500] | 0.527 [0.496, 0.558] | 0.473 [0.442, 0.504] | 0.473 | -0.033 [-0.096, 0.026] |
 | Qwen/Qwen3-0.6B (zero-shot) | 1000 | 0.539 [0.502, 0.575] | 0.521 [0.496, 0.545] | 0.538 [0.505, 0.569] | 0.295 [0.278, 0.311] | 0.193 | 0.048 [-0.017, 0.110] |
 | Qwen/Qwen3-1.7B (zero-shot) | 1000 | 0.525 [0.489, 0.562] | 0.495 [0.469, 0.523] | 0.482 [0.451, 0.514] | 0.416 [0.389, 0.444] | 0.393 | 0.030 [-0.034, 0.093] |
+| Qwen/Qwen3-4B (zero-shot) | 1000 | 0.544 [0.507, 0.578] | 0.498 [0.493, 0.503] | 0.525 [0.494, 0.557] | 0.472 [0.441, 0.503] | 0.473 | 0.049 [-0.015, 0.111] |
 
 **Look-ahead probe (AUC)**: DiD = (pre orig - pre anon) - (post orig - post anon); > 0 suggests recall of pre-cutoff outcomes.
 
@@ -87,15 +91,28 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen2.5-3B-Instruct | 0.536 [0.501, 0.572] | 0.531 [0.495, 0.566] | 0.515 [0.482, 0.552] | 0.543 [0.509, 0.580] | 0.021 [-0.031, 0.068] | 0.033 [-0.007, 0.074] |
 | Qwen/Qwen3-0.6B | 0.488 [0.453, 0.523] | 0.495 [0.463, 0.533] | 0.525 [0.489, 0.559] | 0.526 [0.491, 0.561] | -0.037 [-0.085, 0.015] | -0.007 [-0.043, 0.029] |
 | Qwen/Qwen3-1.7B | 0.506 [0.473, 0.543] | 0.491 [0.457, 0.529] | 0.516 [0.480, 0.552] | 0.525 [0.489, 0.561] | -0.010 [-0.060, 0.041] | 0.024 [-0.010, 0.058] |
+| Qwen/Qwen3-4B | 0.496 [0.462, 0.533] | 0.500 [0.465, 0.537] | 0.513 [0.477, 0.548] | 0.503 [0.467, 0.541] | -0.017 [-0.067, 0.034] | -0.014 [-0.046, 0.017] |
 
-**Memorization vs. model size** (exploratory, not pre-registered): one joint bootstrap over the 6 zero-shot models, which all score the same 1000 + 1000 filings.
+**Memorization vs. model size** (exploratory, not pre-registered): one joint bootstrap over the 7 zero-shot models, which all score the same 1000 + 1000 filings.
 
 | quantity | estimate [95% CI] |
 |---|---|
-| mean DiD over models | 0.004 [-0.012, 0.022] |
-| slope of DiD per 10x parameters | 0.071 [0.014, 0.131] |
-| ... from the masking effect before the cutoff | 0.025 [-0.015, 0.065] |
-| ... minus the masking effect after the cutoff | -0.046 [-0.089, -0.003] |
+| mean DiD over models | 0.002 [-0.014, 0.018] |
+| slope of DiD per 10x parameters | 0.037 [-0.007, 0.082] |
+| ... from the masking effect before the cutoff | 0.012 [-0.020, 0.043] |
+| ... minus the masking effect after the cutoff | -0.025 [-0.056, 0.008] |
+
+Leave one model out: the slope interval excludes 0 in 1 of 7 cases.
+
+| model left out | slope per 10x [95% CI] |
+|---|---|
+| HuggingFaceTB/SmolLM2-1.7B-Instruct | 0.036 [-0.008, 0.080] |
+| Qwen/Qwen2.5-0.5B-Instruct | 0.014 [-0.040, 0.067] |
+| Qwen/Qwen2.5-1.5B-Instruct | 0.037 [-0.007, 0.082] |
+| Qwen/Qwen2.5-3B-Instruct | 0.024 [-0.024, 0.070] |
+| Qwen/Qwen3-0.6B | 0.043 [-0.014, 0.098] |
+| Qwen/Qwen3-1.7B | 0.035 [-0.010, 0.080] |
+| Qwen/Qwen3-4B | 0.071 [0.014, 0.131] |
 
 **Long-short on post-cutoff test** (top vs bottom tercile of score, cut-offs from val, 5 bps per side, market-hedged)
 
@@ -110,3 +127,4 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen2.5-3B-Instruct (zero-shot) | 657 | 338 | -0.021 | 0.433 | -0.05 [-2.05, 1.52] |
 | Qwen/Qwen3-0.6B (zero-shot) | 674 | 335 | 0.181 | 0.348 | 0.52 [-1.10, 2.08] |
 | Qwen/Qwen3-1.7B (zero-shot) | 696 | 342 | 0.046 | 0.376 | 0.12 [-1.68, 1.79] |
+| Qwen/Qwen3-4B (zero-shot) | 760 | 344 | -0.550 | 0.323 | -1.70 [-3.46, -0.06] |

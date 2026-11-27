@@ -68,4 +68,6 @@ selection.
 * 2026-11-27, **exploratory analysis, added after seeing the per-model DiDs** of six models: a joint bootstrap over
   models (same filing draw for every model) for the mean DiD and the slope of the DiD on log10(parameters), with the
   slope split into its pre- and post-cutoff masking terms (`src/nopeeking/eval/scaling.py`). It is reported as
-  exploratory, not as a confirmatory test.
+  exploratory, not as a confirmatory test. With six models the slope interval excluded zero; after adding the
+  seventh (Qwen3-4B) it no longer does. A leave-one-model-out check was then added to the same analysis and is
+  reported with it, so that the dependence on single models is visible.

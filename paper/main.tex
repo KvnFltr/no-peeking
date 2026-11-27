@@ -47,14 +47,14 @@ proper-scoring (Brier) reward and a grounding reward that checks cited facts aga
 discrimination, calibration, faithfulness and a cost-aware long-short portfolio, with bootstrap confidence intervals
 and comparisons pre-registered before any model was scored on the test set. On the first release
 (\NFilings{} filings), the best of \ProbeNModels{} open models (0.5B--4B parameters) reaches an AUC of
-\BestLLMTestPostAuc{} on post-cutoff filings, against \TfidfLrTestPostAuc{} for a TF-IDF classifier. No single model
-shows a significant memorization effect, but the difference-in-differences grows with model size
-(\ScalingSlopePerDecade{} AUC per tenfold increase in parameters, 95\% CI [\ScalingSlopePerDecadeLo{},
-\ScalingSlopePerDecadeHi{}]), mostly because larger models do better on anonymized than on original post-cutoff text.
-Code, data-building scripts, derived labels and a leaderboard are released.
+\BestLLMTestPostAuc{} on post-cutoff filings, against \TfidfLrTestPostAuc{} for a TF-IDF classifier. No model shows a
+significant memorization effect, alone or pooled (mean difference-in-differences \ScalingMeanDid{}, 95\% CI
+[\ScalingMeanDidLo{}, \ScalingMeanDidHi{}]), and the effect does not grow significantly with size across models
+(\ScalingSlopePerDecade{} [\ScalingSlopePerDecadeLo{}, \ScalingSlopePerDecadeHi{}] per tenfold increase in
+parameters), although it does within the Qwen2.5 family. Code, data-building scripts, derived labels and a
+leaderboard are released.
 % Claims above that depend on the current results (re-check whenever models are added): the best LLM is below
-% TF-IDF; no single DiD interval excludes 0 (\NLLMDidAboveZero); the slope interval excludes 0; the post-cutoff
-% masking term drives the slope (\ScalingSlopeAnonEffectPost vs \ScalingSlopeAnonEffectPre).
+% TF-IDF; no DiD interval excludes 0 (\NLLMDidAboveZero); the mean and slope intervals include 0; Qwen2.5 rises.
 \end{abstract}
 
 \section{Introduction}
@@ -90,9 +90,9 @@ that do not survive out of sample?
   distillation, DPO on correct-vs-wrong rationales, and GRPO with Brier, grounding and format rewards, all under the
   same budget and evaluated for calibration and faithfulness, not only accuracy (\S\ref{sec:posttrain}).
   \item \textbf{Findings on v1.} Filing text predicts the 3-day reaction only weakly (TF-IDF AUC
-  \TfidfLrTestPostAuc{} after the cutoff); zero-shot open models up to 4B parameters do not beat it. The memorization
-  estimate rises with size within and across families, a trend that a joint bootstrap over models detects although
-  no individual model does, and that comes mostly from how masking changes predictions \emph{after} the cutoff
+  \TfidfLrTestPostAuc{} after the cutoff); zero-shot open models up to 4B parameters do not beat it, and none shows
+  detectable recall of pre-cutoff outcomes. A joint bootstrap over models bounds the pooled effect and its growth with
+  size, and a leave-one-model-out check shows how a size trend seen on a few models can rest on a single one
   (\S\ref{sec:results}).
 \end{enumerate}
 
@@ -196,7 +196,8 @@ filings that happens to favour one model's pre-cutoff AUC tends to favour the ot
 over models and for the least-squares slope of the DiD on $\log_{10}$ of the parameter count. Because the DiD is the
 difference of two masking effects, its slope splits exactly into the slope of
 $A_{\text{pre},\text{orig}}-A_{\text{pre},\text{anon}}$ minus the slope of $A_{\text{post},\text{orig}}-A_{\text{post},\text{anon}}$,
-which tells whether a trend comes from the period where recall is possible. This analysis was added after the
+which tells whether a trend comes from the period where recall is possible. Re-estimating the slope with each model
+left out, on the same bootstrap draws, shows whether it rests on a single model. This analysis was added after the
 per-model results were seen and is exploratory (it is listed as such in the pre-registration changelog).
 
 \section{Post-training small models}
@@ -319,24 +320,25 @@ For the language models, no individual DiD interval lies above zero (count: \NLL
 and the mean over models is \ScalingMeanDid{} [\ScalingMeanDidLo{}, \ScalingMeanDidHi{}]: at these sizes, there is no
 evidence that the models score 2023 filings better because they remember what followed them.
 
-The DiD does, however, depend on size (Figure~\ref{fig:scaling}). Within both Qwen families it rises from negative
-values for the smallest models to positive ones for the largest, % CHECK
-and the joint bootstrap puts the slope at
-\ScalingSlopePerDecade{} [\ScalingSlopePerDecadeLo{}, \ScalingSlopePerDecadeHi{}] per tenfold increase in parameters
-(share of bootstrap slopes $\le 0$: \ScalingShareBootSlopeLeZero{}). % CHECK: interval excludes 0
-The decomposition qualifies this trend. The slope of the pre-cutoff masking effect is
-\ScalingSlopeAnonEffectPre{} [\ScalingSlopeAnonEffectPreLo{}, \ScalingSlopeAnonEffectPreHi{}], whereas that of the
-post-cutoff masking effect is \ScalingSlopeAnonEffectPost{} [\ScalingSlopeAnonEffectPostLo{},
-\ScalingSlopeAnonEffectPostHi{}]. % CHECK: post term significant, pre term not
-Most of the trend thus comes from larger models scoring \emph{anonymized} post-cutoff filings better than the
-original ones, not from a growing advantage on original 2023 filings. Two readings fit this pattern. Larger models
-know more about each firm as of their training cutoff, and names and dates may summon that knowledge as a prior
-that is stale for events after the cutoff, a cost that masking removes; this is the ``distraction'' effect that
-\citet{glasserman2023lookahead} report for headlines. Alternatively, the weak pre-cutoff term is the onset of recall
-that larger models would make significant. The 7B--8B models scored on GPU separate the two: the first predicts a
-flat pre-cutoff term, the second a rising one. Either way, a single-model memorization test at this sample size would
-have reported nothing, and a backtest on original pre-cutoff filings would not have revealed that identity cues
-change predictions in a size-dependent way.
+Does the DiD grow with size, as memorization does \citep{carlini2023quantifying}? Within Qwen2.5 it rises
+monotonically from the 0.5B to the 3B model, but not within Qwen3, where the 4B model falls back below zero
+(Figure~\ref{fig:scaling}). % CHECK
+Across all \ScalingNModels{} models the joint bootstrap puts the slope at \ScalingSlopePerDecade{}
+[\ScalingSlopePerDecadeLo{}, \ScalingSlopePerDecadeHi{}] per tenfold increase in parameters (share of bootstrap slopes
+$\le 0$: \ScalingShareBootSlopeLeZero{}); % CHECK: interval includes 0
+neither the pre-cutoff masking term (\ScalingSlopeAnonEffectPre{} [\ScalingSlopeAnonEffectPreLo{},
+\ScalingSlopeAnonEffectPreHi{}]) nor the post-cutoff one (\ScalingSlopeAnonEffectPost{}
+[\ScalingSlopeAnonEffectPostLo{}, \ScalingSlopeAnonEffectPostHi{}]) has a slope distinguishable from zero.
+
+This conclusion is fragile in an instructive way. Leaving out one model at a time, the slope interval excludes zero
+in \ScalingLooNExcludingZero{} of \ScalingLooN{} cases (the full list is in the repository's results summary).
+% CHECK: the exclusion that matters is Qwen3-4B
+With the first six models we probed, before Qwen3-4B, the interval excluded zero, and the trend came mostly from
+larger models scoring \emph{anonymized} post-cutoff filings better than original ones, which would fit a
+``distraction'' effect of stale firm knowledge \citep{glasserman2023lookahead}. One more model removed it. Size trends
+in memorization probes estimated from a handful of small models should therefore be reported with this kind of
+check; ours remains an open question for the 7B--8B models scored on GPU, where recall would show up as a rising
+pre-cutoff term.
 
 \subsection{Post-training}
 \providecommand{\PostTrainNRuns}{0}

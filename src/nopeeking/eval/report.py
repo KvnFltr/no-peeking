@@ -213,6 +213,16 @@ def scaling_md(cfg: DataConfig) -> list[str]:
             f"| ... from the masking effect before the cutoff | {_ci(sc, 'slope_anon_effect_pre')} |",
             f"| ... minus the masking effect after the cutoff | {_ci(sc, 'slope_anon_effect_post')} |",
         ]
+    if sc.get("loo"):
+        out += [
+            "",
+            f"Leave one model out: the slope interval excludes 0 in {sc['loo_n_excluding_zero']} of "
+            f"{len(sc['loo'])} cases.",
+            "",
+            "| model left out | slope per 10x [95% CI] |",
+            "|---|---|",
+            *(f"| {r['dropped']} | {_ci(r, 'slope')} |" for r in sc["loo"]),
+        ]
     return [*out, ""]
 
 
@@ -240,6 +250,9 @@ def summary_macros(baselines: dict, probes: dict[str, dict], scaling: dict | Non
             out[f"Scaling {k}"] = num(v)
         elif k == "n_models":
             out["Scaling N Models"] = str(v)
+        elif k == "loo":
+            out["Scaling loo N"] = str(len(v))
+            out["Scaling loo n excluding zero"] = str(scaling["loo_n_excluding_zero"])
     return out
 
 
@@ -277,6 +290,13 @@ def scaling_figure(cfg: DataConfig, path: Path) -> Path | None:
     sizes = sorted({m["params_b"] for m in sc["models"]})
     ax.set_xticks(sizes, [f"{s:g}B" for s in sizes])
     ax.minorticks_off()
+    close = 0.08  # in log10 units: neighbours nearer than this get their labels pushed apart
+    for i, label in enumerate(ax.get_xticklabels()):
+        lx = np.log10(sizes[i])
+        if i + 1 < len(sizes) and np.log10(sizes[i + 1]) - lx < close:
+            label.set_horizontalalignment("right")
+        elif i > 0 and lx - np.log10(sizes[i - 1]) < close:
+            label.set_horizontalalignment("left")
     ax.set_xlabel("Parameters (log scale)", color=INK2)
     ax.set_ylabel("DiD of AUC (> 0: recall)", color=INK2)
     if "slope_per_decade" in sc:

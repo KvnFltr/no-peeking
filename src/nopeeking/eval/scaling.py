@@ -129,4 +129,16 @@ def scaling_analysis(
         out[f"{key}_lo"], out[f"{key}_hi"] = _interval(values[1:])
     if "slope_per_decade" in blocks:
         out["share_boot_slope_le_0"] = float(np.mean(blocks["slope_per_decade"][1:] <= 0))
+    if len(models) >= 4:
+        # leave one model out: how much does the slope rest on any single model?
+        loo = []
+        for k, (name, *_) in enumerate(models):
+            keep = np.arange(len(models)) != k
+            if np.ptp(x[keep]) == 0:
+                continue
+            s = _slopes(x[keep], did[:, keep])
+            lo, hi = _interval(s[1:])
+            loo.append({"dropped": name, "slope": float(s[0]), "slope_lo": lo, "slope_hi": hi})
+        out["loo"] = loo
+        out["loo_n_excluding_zero"] = sum(r["slope_lo"] > 0 or r["slope_hi"] < 0 for r in loo)
     return out

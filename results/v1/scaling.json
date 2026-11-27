@@ -1,5 +1,5 @@
 {
-  "n_models": 6,
+  "n_models": 7,
   "n_pre": 1000,
   "n_post": 1000,
   "n_boot": 2000,
@@ -51,19 +51,72 @@
       "did": 0.02350719981447985,
       "did_lo": -0.009734166801509098,
       "did_hi": 0.05737799809696185
+    },
+    {
+      "model": "Qwen/Qwen3-4B",
+      "params_b": 4.0,
+      "family": "Qwen3",
+      "did": -0.013822866879880824,
+      "did_lo": -0.04468536625075904,
+      "did_hi": 0.017904081887568726
     }
   ],
-  "mean_did": 0.004465621176399158,
-  "mean_did_lo": -0.012360804047797049,
-  "mean_did_hi": 0.021612432646629518,
-  "slope_per_decade": 0.07147342784470474,
-  "slope_per_decade_lo": 0.014194668473780692,
-  "slope_per_decade_hi": 0.1311020643344787,
-  "slope_anon_effect_pre": 0.025444583203152193,
-  "slope_anon_effect_pre_lo": -0.015440103366735137,
-  "slope_anon_effect_pre_hi": 0.06485428535569296,
-  "slope_anon_effect_post": -0.04602884464155255,
-  "slope_anon_effect_post_lo": -0.08850799310980775,
-  "slope_anon_effect_post_hi": -0.002898628114541211,
-  "share_boot_slope_le_0": 0.008
+  "mean_did": 0.0018529800255020173,
+  "mean_did_lo": -0.013970981230412073,
+  "mean_did_hi": 0.017673516543451128,
+  "slope_per_decade": 0.03692122749597994,
+  "slope_per_decade_lo": -0.0073412257856106606,
+  "slope_per_decade_hi": 0.08217521527586155,
+  "slope_anon_effect_pre": 0.012162843486793083,
+  "slope_anon_effect_pre_lo": -0.019510566679452702,
+  "slope_anon_effect_pre_hi": 0.04331960672450226,
+  "slope_anon_effect_post": -0.024758384009186854,
+  "slope_anon_effect_post_lo": -0.05605708030353081,
+  "slope_anon_effect_post_hi": 0.007917587747885837,
+  "share_boot_slope_le_0": 0.056,
+  "loo": [
+    {
+      "dropped": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "slope": 0.03631554701246518,
+      "slope_lo": -0.007846576160563251,
+      "slope_hi": 0.08027935905692682
+    },
+    {
+      "dropped": "Qwen/Qwen2.5-0.5B-Instruct",
+      "slope": 0.013769163752527252,
+      "slope_lo": -0.03973985566127478,
+      "slope_hi": 0.0669153592875373
+    },
+    {
+      "dropped": "Qwen/Qwen2.5-1.5B-Instruct",
+      "slope": 0.03693822596506107,
+      "slope_lo": -0.00729094113194837,
+      "slope_hi": 0.08225343252407818
+    },
+    {
+      "dropped": "Qwen/Qwen2.5-3B-Instruct",
+      "slope": 0.0235822437235002,
+      "slope_lo": -0.023891999149428838,
+      "slope_hi": 0.06969493077258856
+    },
+    {
+      "dropped": "Qwen/Qwen3-0.6B",
+      "slope": 0.04265410833584407,
+      "slope_lo": -0.014208665451451202,
+      "slope_hi": 0.09806219617576253
+    },
+    {
+      "dropped": "Qwen/Qwen3-1.7B",
+      "slope": 0.03494853056491427,
+      "slope_lo": -0.009800392313586908,
+      "slope_hi": 0.08014354860765975
+    },
+    {
+      "dropped": "Qwen/Qwen3-4B",
+      "slope": 0.07147342784470474,
+      "slope_lo": 0.014194668473780692,
+      "slope_hi": 0.1311020643344787
+    }
+  ],
+  "loo_n_excluding_zero": 1
 }
