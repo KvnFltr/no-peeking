@@ -62,3 +62,10 @@ selection.
   was public, which is a look-ahead error in the simulator (it reported a TF-IDF Sharpe ratio of 2.12). Positions now
   enter at the close of t and earn t+1..t+2 only; this was fixed before any language model was evaluated, and the
   prediction target itself is unchanged.
+* 2026-11-26/27, RQ1 runs: zero-shot models were scored on a seeded sample of 1,000 filings per split (512-token
+  prompts) on CPU runners, because no GPU was available yet; the protocol is otherwise unchanged. Models added to the
+  pre-registered Qwen2.5 list: Qwen3-0.6B/1.7B/4B and SmolLM2-1.7B (all released before 2025-07).
+* 2026-11-27, **exploratory analysis, added after seeing the per-model DiDs** of six models: a joint bootstrap over
+  models (same filing draw for every model) for the mean DiD and the slope of the DiD on log10(parameters), with the
+  slope split into its pre- and post-cutoff masking terms (`src/nopeeking/eval/scaling.py`). It is reported as
+  exploratory, not as a confirmatory test.

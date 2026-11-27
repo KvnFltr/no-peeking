@@ -144,3 +144,26 @@ def test_probe_cached_only_refuses_to_load_a_model(tmp_path):
     cfg = _make(tmp_path)
     with pytest.raises(RuntimeError, match="missing"):
         run_probe(cfg, "fake", max_input_tokens=512, with_market=False, cached_only=True)
+
+
+def test_scaling_joint_bootstrap_matches_per_model_did(tmp_path, monkeypatch):
+    import nopeeking.eval.llm as llm
+    from nopeeking.eval.probe import run_probe
+    from nopeeking.eval.report import summary_macros
+    from nopeeking.eval.scaling import scaling_analysis
+
+    monkeypatch.setattr(llm, "YesNoScorer", _FakeScorer)
+    cfg = _make(tmp_path)
+    meta = {f"fake/m{i}": {"params_b": size, "family": "Fake"} for i, size in enumerate((0.5, 1.5, 7.0))}
+    probes = {}
+    for name in meta:
+        path = Path(run_probe(cfg, name, max_input_tokens=512, with_market=False))
+        probes[path.stem] = json.loads(path.read_text())
+    sc = scaling_analysis(cfg, probes, meta, n_boot=200)
+    assert sc["n_models"] == 3 and sc["n_pre"] == 60 and sc["n_post"] == 60
+    for m in sc["models"]:
+        assert abs(m["did"] - probes[m["model"].replace("/", "__")]["gap"]["auc"]["did"]) < 1e-12
+    # identical predictions for every size: the DiD cannot depend on size, in any bootstrap draw
+    assert sc["slope_per_decade"] == 0 and sc["slope_per_decade_lo"] == 0 and sc["slope_per_decade_hi"] == 0
+    macros = summary_macros({}, probes, sc)
+    assert macros["Probe N Models"] == "3" and macros["Scaling N Models"] == "3"

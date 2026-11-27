@@ -143,7 +143,10 @@ def prompts_tex() -> str:
     from nopeeking.prompts import REASONING_INSTRUCTIONS, SYSTEM, direct_question
 
     def box(title: str, body: str) -> str:
-        return f"\\paragraph{{{title}}}\n\\begin{{verbatim}}\n{_wrap(body)}\n\\end{{verbatim}}\n"
+        # \small monospace fits ~84 characters in the 5.5in NeurIPS text width; wrap below that
+        return (
+            f"\\paragraph{{{title}}}\n{{\\small\n\\begin{{verbatim}}\n{_wrap(body)}\n\\end{{verbatim}}\n}}\n"
+        )
 
     return (
         box("System prompt", SYSTEM)
@@ -152,7 +155,7 @@ def prompts_tex() -> str:
     )
 
 
-def _wrap(text: str, width: int = 95) -> str:
+def _wrap(text: str, width: int = 80) -> str:
     import textwrap
 
     return "\n".join(textwrap.fill(line, width) if line else "" for line in text.split("\n"))
@@ -165,6 +168,7 @@ def write_latex(
     trained: list[dict],
     stats: dict,
     flog: list[dict],
+    extra: dict[str, str] | None = None,
 ) -> list[Path]:
     out = cfg.run_results_dir / "tables"
     out.mkdir(parents=True, exist_ok=True)
@@ -206,10 +210,13 @@ def write_latex(
     for name, g in gaps:
         for k, v in g.items():
             add(f"{name} gap {k}", num(v))
+    add("Post Train N Runs", str(len(trained)))
     for t in trained:
         for k in ("parse_failure_rate", "fact_precision_mean", "leak_rate"):
             if t.get(k) is not None:
                 add(f"{t['run']} {k}", num(t[k]))
+    for name, value in (extra or {}).items():
+        add(name, value)
     path = cfg.run_results_dir / "macros.tex"
     body = "\n".join(f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in macros.items())
     path.write_text(

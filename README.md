@@ -172,6 +172,15 @@ Dataset `v1`: 19783 filings, 2018-01-02 to 2026-11-23. Split sizes: train 7948, 
 | Qwen/Qwen3-0.6B | 0.488 [0.453, 0.523] | 0.495 [0.463, 0.533] | 0.525 [0.489, 0.559] | 0.526 [0.491, 0.561] | -0.037 [-0.085, 0.015] | -0.007 [-0.043, 0.029] |
 | Qwen/Qwen3-1.7B | 0.506 [0.473, 0.543] | 0.491 [0.457, 0.529] | 0.516 [0.480, 0.552] | 0.525 [0.489, 0.561] | -0.010 [-0.060, 0.041] | 0.024 [-0.010, 0.058] |
 
+**Memorization vs. model size** (exploratory, not pre-registered): one joint bootstrap over the 6 zero-shot models, which all score the same 1000 + 1000 filings.
+
+| quantity | estimate [95% CI] |
+|---|---|
+| mean DiD over models | 0.004 [-0.012, 0.022] |
+| slope of DiD per 10x parameters | 0.071 [0.014, 0.131] |
+| ... from the masking effect before the cutoff | 0.025 [-0.015, 0.065] |
+| ... minus the masking effect after the cutoff | -0.046 [-0.089, -0.003] |
+
 **Long-short on post-cutoff test** (top vs bottom tercile of score, cut-offs from val, 5 bps per side, market-hedged)
 
 | method | positions | active days | ann. return | ann. vol | Sharpe [95% CI] |

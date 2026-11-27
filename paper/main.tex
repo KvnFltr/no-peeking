@@ -45,9 +45,16 @@ post-training small models (0.5B--1.5B parameters, trainable on free GPUs) to re
 could have written beforehand, compared with outcome-blind rationales, preference optimization, and GRPO with a
 proper-scoring (Brier) reward and a grounding reward that checks cited facts against the filing. We evaluate
 discrimination, calibration, faithfulness and a cost-aware long-short portfolio, with bootstrap confidence intervals
-and comparisons pre-registered before any model was scored on the test set. Code, data-building scripts, derived
-labels and a leaderboard are released.
-% The final abstract adds the three headline numbers through macros once the main runs are complete.
+and comparisons pre-registered before any model was scored on the test set. On the first release
+(\NFilings{} filings), the best of \ProbeNModels{} open models (0.5B--4B parameters) reaches an AUC of
+\BestLLMTestPostAuc{} on post-cutoff filings, against \TfidfLrTestPostAuc{} for a TF-IDF classifier. No single model
+shows a significant memorization effect, but the difference-in-differences grows with model size
+(\ScalingSlopePerDecade{} AUC per tenfold increase in parameters, 95\% CI [\ScalingSlopePerDecadeLo{},
+\ScalingSlopePerDecadeHi{}]), mostly because larger models do better on anonymized than on original post-cutoff text.
+Code, data-building scripts, derived labels and a leaderboard are released.
+% Claims above that depend on the current results (re-check whenever models are added): the best LLM is below
+% TF-IDF; no single DiD interval excludes 0 (\NLLMDidAboveZero); the slope interval excludes 0; the post-cutoff
+% masking term drives the slope (\ScalingSlopeAnonEffectPost vs \ScalingSlopeAnonEffectPre).
 \end{abstract}
 
 \section{Introduction}
@@ -82,6 +89,11 @@ that do not survive out of sample?
   \item \textbf{A controlled post-training study} on 0.5B--1.5B students: hindsight vs.\ outcome-blind rationale
   distillation, DPO on correct-vs-wrong rationales, and GRPO with Brier, grounding and format rewards, all under the
   same budget and evaluated for calibration and faithfulness, not only accuracy (\S\ref{sec:posttrain}).
+  \item \textbf{Findings on v1.} Filing text predicts the 3-day reaction only weakly (TF-IDF AUC
+  \TfidfLrTestPostAuc{} after the cutoff); zero-shot open models up to 4B parameters do not beat it. The memorization
+  estimate rises with size within and across families, a trend that a joint bootstrap over models detects although
+  no individual model does, and that comes mostly from how masking changes predictions \emph{after} the cutoff
+  (\S\ref{sec:results}).
 \end{enumerate}
 
 \section{Related work}
@@ -176,6 +188,17 @@ periods. As a control we report the same quantity for a TF-IDF logistic regressi
 remember 2023 outcomes: its DiD measures what masking does to a non-memorizing reader. The probe does not require
 access to the training data and runs on any causal LM on the Hugging Face Hub.
 
+\paragraph{Size dependence.}
+Memorization of training data grows with model size \citep{carlini2023quantifying}, so a natural question is whether
+the DiD does too. All probed models score the same seeded sample of filings, so their DiDs are correlated: a draw of
+filings that happens to favour one model's pre-cutoff AUC tends to favour the others'. We therefore resample filings
+\emph{once} per bootstrap draw and recompute every model's DiD on that draw, which yields intervals for the mean DiD
+over models and for the least-squares slope of the DiD on $\log_{10}$ of the parameter count. Because the DiD is the
+difference of two masking effects, its slope splits exactly into the slope of
+$A_{\text{pre},\text{orig}}-A_{\text{pre},\text{anon}}$ minus the slope of $A_{\text{post},\text{orig}}-A_{\text{post},\text{anon}}$,
+which tells whether a trend comes from the period where recall is possible. This analysis was added after the
+per-model results were seen and is exploratory (it is listed as such in the pre-registration changelog).
+
 \section{Post-training small models}
 \label{sec:posttrain}
 
@@ -208,9 +231,13 @@ free Kaggle GPU with TRL \citep{vonwerra2020trl}.
 \label{sec:setup}
 
 \paragraph{Models.}
-Zero-shot: Qwen2.5 \citep{qwen2025qwen25} 0.5B--7B and other open instruction models released before July 2025, so
-that the post-cutoff test is unseen by all of them. Non-LLM baselines: majority class, event-type prior and TF-IDF
-with logistic regression (regularization chosen on validation AUC).
+Zero-shot: open instruction models released before July 2025, so that the post-cutoff test is unseen by all of them:
+Qwen2.5 \citep{qwen2025qwen25} (0.5B, 1.5B, 3B; September 2024), Qwen3 \citep{qwen2025qwen3} (0.6B, 1.7B, 4B; April
+2025, thinking mode disabled) and SmolLM2 \citep{benallal2025smollm2} (1.7B; November 2024). Each is probed on the
+same seeded sample of 1{,}000 filings per split with a 512-token prompt budget, in float32 (bfloat16 for 4B) on
+4-vCPU machines; 7B--8B models are scored with 4-bit weights on a GPU. Non-LLM baselines: majority class (train base
+rate), event-type prior and TF-IDF with logistic regression (regularization chosen on validation AUC), evaluated on
+the full test splits.
 
 \paragraph{Metrics.}
 AUC is the primary metric (base rates move across periods); we also report accuracy, balanced accuracy, the Brier
@@ -243,7 +270,22 @@ scored on a test split; deviations are listed in its changelog.
   \inputtable{main}
 \end{table}
 
-% Narrative written once the main runs exist; every number below must come from macros.tex.
+% Every number below comes from macros.tex. Sentences whose direction depends on the current results carry a
+% "% CHECK" comment: re-read them whenever a model is added.
+
+Filing text carries a small but measurable signal about the 3-day reaction (Table~\ref{tab:main}). TF-IDF reaches an
+AUC of \TfidfLrTestPostAuc{} [\TfidfLrTestPostAucLo{}, \TfidfLrTestPostAucHi{}] after the cutoff, with a rank
+correlation of \TfidfLrTestPostRankIc{} between its score and the realized return, above the event-type prior
+(\EventTypePriorTestPostAuc{}). Masking names, tickers and dates leaves it unchanged
+(\TfidfLrAnonTestPostAuc{} on anonymized input). A tradable long-short portfolio built on it earns an annualized
+Sharpe ratio of \TfidfLrSharpe{} [\TfidfLrSharpeLo{}, \TfidfLrSharpeHi{}], an interval that includes zero.
+
+The zero-shot language models do not do better. The best of the \ProbeNModels{}, \BestLLM{}, reaches
+\BestLLMTestPostAuc{} [\BestLLMTestPostAucLo{}, \BestLLMTestPostAucHi{}] (models above the TF-IDF point estimate:
+\NLLMAboveTfidf{} of \ProbeNModels{}). % CHECK: none above TF-IDF
+Their probabilities are also poorly calibrated: several answer \texttt{No} (or \texttt{Yes}) for nearly every
+filing, which leaves the ranking, and hence the AUC, informative while the Brier score degrades, e.g.\ to
+\QwenQwenTwoFiveThreeBInstructZeroShotTestPostBrier{} for Qwen2.5-3B against \TfidfLrTestPostBrier{} for TF-IDF.
 
 \subsection{Look-ahead probe}
 \begin{figure}[t]
@@ -262,7 +304,43 @@ scored on a test split; deviations are listed in its changelog.
   \inputtable{probe}
 \end{table}
 
+\begin{figure}[t]
+  \centering
+  \IfFileExists{\resultsdir/figures/scaling.png}{\includegraphics[width=0.8\linewidth]{\resultsdir/figures/scaling.png}}{\textit{[figure not generated yet]}}
+  \caption{Memorization estimate (DiD of AUC) against parameter count, with per-model 95\% intervals from the joint
+  bootstrap. Grey band: the TF-IDF control. The title gives the slope per tenfold increase in parameters.}
+  \label{fig:scaling}
+\end{figure}
+
+The control behaves as intended: masking moves the TF-IDF model's AUC by almost nothing in either period, and its DiD
+is \TFIDFLRControlGapDid{} [\TFIDFLRControlGapDidLo{}, \TFIDFLRControlGapDidHi{}] (Table~\ref{tab:probe}).
+For the language models, no individual DiD interval lies above zero (count: \NLLMDidAboveZero{} of
+\ProbeNModels{}), % CHECK
+and the mean over models is \ScalingMeanDid{} [\ScalingMeanDidLo{}, \ScalingMeanDidHi{}]: at these sizes, there is no
+evidence that the models score 2023 filings better because they remember what followed them.
+
+The DiD does, however, depend on size (Figure~\ref{fig:scaling}). Within both Qwen families it rises from negative
+values for the smallest models to positive ones for the largest, % CHECK
+and the joint bootstrap puts the slope at
+\ScalingSlopePerDecade{} [\ScalingSlopePerDecadeLo{}, \ScalingSlopePerDecadeHi{}] per tenfold increase in parameters
+(share of bootstrap slopes $\le 0$: \ScalingShareBootSlopeLeZero{}). % CHECK: interval excludes 0
+The decomposition qualifies this trend. The slope of the pre-cutoff masking effect is
+\ScalingSlopeAnonEffectPre{} [\ScalingSlopeAnonEffectPreLo{}, \ScalingSlopeAnonEffectPreHi{}], whereas that of the
+post-cutoff masking effect is \ScalingSlopeAnonEffectPost{} [\ScalingSlopeAnonEffectPostLo{},
+\ScalingSlopeAnonEffectPostHi{}]. % CHECK: post term significant, pre term not
+Most of the trend thus comes from larger models scoring \emph{anonymized} post-cutoff filings better than the
+original ones, not from a growing advantage on original 2023 filings. Two readings fit this pattern. Larger models
+know more about each firm as of their training cutoff, and names and dates may summon that knowledge as a prior
+that is stale for events after the cutoff, a cost that masking removes; this is the ``distraction'' effect that
+\citet{glasserman2023lookahead} report for headlines. Alternatively, the weak pre-cutoff term is the onset of recall
+that larger models would make significant. The 7B--8B models scored on GPU separate the two: the first predicts a
+flat pre-cutoff term, the second a rising one. Either way, a single-model memorization test at this sample size would
+have reported nothing, and a backtest on original pre-cutoff filings would not have revealed that identity cues
+change predictions in a size-dependent way.
+
 \subsection{Post-training}
+\providecommand{\PostTrainNRuns}{0}
+\ifnum\PostTrainNRuns>0
 \begin{table}[t]
   \centering
   \caption{Post-trained students on the post-cutoff test: discrimination, calibration and faithfulness.}
@@ -270,6 +348,11 @@ scored on a test split; deviations are listed in its changelog.
   \small
   \inputtable{posttrain}
 \end{table}
+\else
+The post-training runs of \S\ref{sec:posttrain} need a GPU and are not part of this version. Their configurations,
+rewards, filters and evaluation code are released, and their results will be added in a revision under the same
+pre-registered protocol and budget rule.
+\fi
 
 \section{Limitations}
 \label{sec:limits}

@@ -1,0 +1,69 @@
+{
+  "n_models": 6,
+  "n_pre": 1000,
+  "n_post": 1000,
+  "n_boot": 2000,
+  "models": [
+    {
+      "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "params_b": 1.7,
+      "family": "SmolLM2",
+      "did": 0.009984031814586458,
+      "did_lo": -0.030813655537939372,
+      "did_hi": 0.04932682933088963
+    },
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "params_b": 0.5,
+      "family": "Qwen2.5",
+      "did": -0.03285687821522543,
+      "did_lo": -0.07660920044288949,
+      "did_hi": 0.014343639845838963
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "params_b": 1.5,
+      "family": "Qwen2.5",
+      "did": -0.0007470908387592345,
+      "did_lo": -0.030439573277091934,
+      "did_hi": 0.02895082369307899
+    },
+    {
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "params_b": 3.1,
+      "family": "Qwen2.5",
+      "did": 0.033492429800039636,
+      "did_lo": -0.0072510928915749725,
+      "did_hi": 0.0745430708038843
+    },
+    {
+      "model": "Qwen/Qwen3-0.6B",
+      "params_b": 0.6,
+      "family": "Qwen3",
+      "did": -0.006585965316726339,
+      "did_lo": -0.041028683674827066,
+      "did_hi": 0.028172020380487005
+    },
+    {
+      "model": "Qwen/Qwen3-1.7B",
+      "params_b": 1.7,
+      "family": "Qwen3",
+      "did": 0.02350719981447985,
+      "did_lo": -0.009734166801509098,
+      "did_hi": 0.05737799809696185
+    }
+  ],
+  "mean_did": 0.004465621176399158,
+  "mean_did_lo": -0.012360804047797049,
+  "mean_did_hi": 0.021612432646629518,
+  "slope_per_decade": 0.07147342784470474,
+  "slope_per_decade_lo": 0.014194668473780692,
+  "slope_per_decade_hi": 0.1311020643344787,
+  "slope_anon_effect_pre": 0.025444583203152193,
+  "slope_anon_effect_pre_lo": -0.015440103366735137,
+  "slope_anon_effect_pre_hi": 0.06485428535569296,
+  "slope_anon_effect_post": -0.04602884464155255,
+  "slope_anon_effect_post_lo": -0.08850799310980775,
+  "slope_anon_effect_post_hi": -0.002898628114541211,
+  "share_boot_slope_le_0": 0.008
+}
