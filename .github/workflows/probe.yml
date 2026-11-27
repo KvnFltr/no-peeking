@@ -1,6 +1,7 @@
 # Score an open model with the look-ahead probe on free CPU runners (no GPU needed up to ~3B parameters).
 # Work is spread over split x shard jobs; each uploads its cached predictions as an artifact, and
-# `python scripts/merge_probe_run.py <run-id> ...` merges them and computes the metrics locally.
+# `python scripts/merge_probe_run.py <run-id> [<rerun-id> ...]` merges them and computes the metrics locally.
+# Jobs that hit the time limit still upload what they scored: rerun them with `only` and `resume_run`.
 # Measured on a 4-vCPU runner at 512 tokens: ~3.4 s per prompt for Qwen2.5-0.5B (2,000 prompts per test split),
 # growing roughly with the non-embedding parameter count; pick `shards` so that one job stays well under the
 # 6-hour limit (1000 filings: 0.5B -> 1, 1.5B -> 3, 3B -> 6).
@@ -32,10 +33,17 @@ on:
         description: "Optional subset of jobs to (re)run, e.g. test_pre:1,val:3 (empty = all)"
         required: false
         default: ""
+      resume_run:
+        description: Optional id of an earlier run of the same model; each job resumes from its artifact
+        required: false
+        default: ""
       data_release:
         description: Release tag holding the dataset parquet
         required: true
         default: data-v1
+permissions:
+  contents: read
+  actions: read
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -62,8 +70,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      PRED: results/v1/predictions
     steps:
       - uses: actions/checkout@v4
+      - name: Prediction file name
+        env:
+          MODEL: ${{ inputs.model }}
+        run: echo "PRED_FILE=probe__${MODEL//\//__}__${{ inputs.max_input_tokens }}.parquet" >> "$GITHUB_ENV"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -77,6 +91,14 @@ jobs:
           mkdir -p data/processed/v1
           gh release download "${{ inputs.data_release }}" -p "*.parquet" -p "*.json" -D data/processed/v1
           ls -la data/processed/v1
+      - name: Resume from an earlier run
+        if: inputs.resume_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download "${{ inputs.resume_run }}" -n "probe-${{ matrix.split }}-${{ matrix.shard }}" -D resume || true
+          found=$(find resume -name "$PRED_FILE" | head -1)
+          if [ -n "$found" ]; then mkdir -p "$PRED" && cp "$found" "$PRED/$PRED_FILE" && echo "resuming from $found"; fi
       - name: Probe
         run: >
           nopeeking -v probe "${{ inputs.model }}" --config configs/v1.yaml --splits ${{ matrix.split }}
@@ -87,5 +109,5 @@ jobs:
         with:
           name: probe-${{ matrix.split }}-${{ matrix.shard }}
           path: |
-            results/v1/predictions/probe__*.parquet
+            ${{ env.PRED }}/${{ env.PRED_FILE }}
             logs/probe.log
